@@ -23,7 +23,7 @@ module.exports = {
         historyApiFallback: true,
         contentBase: './public',
         proxy: {
-            "*": "http://localhost:8080"
+            "*": "http://localhost:80"
         },
         stats: {
           // Config for minimal console.log mess.

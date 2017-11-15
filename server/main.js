@@ -12,9 +12,8 @@ import session from 'express-session';
 
 import api from './routes';
 
-
 const app = express();
-const port = 8080;
+const port = 80;
 const devPort = 4000;
 
 app.use(morgan('dev'));
