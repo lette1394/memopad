@@ -14,7 +14,7 @@ import api from './routes';
 
 
 const app = express();
-const port = 3000;
+const port = 8080;
 const devPort = 4000;
 
 app.use(morgan('dev'));
