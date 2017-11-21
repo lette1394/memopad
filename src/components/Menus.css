@@ -1,0 +1,31 @@
+.Buttons {
+	display: flex;
+}
+
+.Buttons .btn {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 3rem;
+
+	color: white;
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+
+.Buttons .add {
+	background: rgb(66, 134, 222);
+}
+
+.Buttons .add:hover {
+	background: rgb(81, 155, 246);
+}
+
+.Buttons .remove {
+	background: rgb(66, 134, 222);
+}
+
+.Buttons .remove:hover {
+	background: rgb(81, 155, 246);
+}

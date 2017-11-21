@@ -5,76 +5,78 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Header extends React.Component {
 
-    constructor(props) {
-        super(props);
+	constructor(props) {
+		super(props);
 
-        // IMPLEMENT: CREATE A SEARCH STATUS
+		// IMPLEMENT: CREATE A SEARCH STATUS
 
-        this.state = {
-            search: false
-        };
+		this.state = {
+			search: false
+		};
 
-        this.toggleSearch = this.toggleSearch.bind(this);
-    }
+		this.toggleSearch = this.toggleSearch.bind(this);
+	}
 
-    toggleSearch() {
-        this.setState({
-            search: !this.state.search
-        });
-    }
+	toggleSearch() {
+		this.setState({
+			search: !this.state.search
+		});
+	}
 
-    render() {
+	render() {
 
-        const loginButton = (
-            <li>
-                <Link to="/login"><i className="material-icons">vpn_key</i></Link>
-            </li>
-        );
+		const loginButton = (
+			<li>
+				로그인 해주세요
+				<Link to="/login"><i className="material-icons">vpn_key</i></Link>
+			</li>
+		);
 
-        const logoutButton = (
-            <li>
-                <a onClick={this.props.onLogout}><i className="material-icons">lock_open</i></a>
-            </li>
-        );
+		const logoutButton = (
+			<li>
+				환영합니다!
+				<a onClick={this.props.onLogout}><i className="material-icons">lock_open</i></a>
+			</li>
+		);
 
-        return (
-            <div>
-                <nav>
-                    <div className="nav-wrapper blue darken-1">
-                        <Link to="/" className="brand-logo center">MEMOPAD</Link>
+		return (
+			<div>
+				<nav>
+					<div className="nav-wrapper blue darken-1">
+						<Link to="/" className="brand-logo center">MEMOPAD</Link>
 
-                        <ul>
-                            <li><a onClick={this.toggleSearch}><i className="material-icons">search</i></a></li>
-                        </ul>
+						<ul>
+							<li><a onClick={this.toggleSearch}><i className="material-icons">search</i></a></li>
+						</ul>
 
-                        <div className="right">
-                            <ul>
-                                { this.props.isLoggedIn ? logoutButton : loginButton }
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-                    <ReactCSSTransitionGroup transitionName="search" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-                        { /* IMPLEMENT: SHOW SEARCH WHEN SEARCH STATUS IS TRUE */}
-                        {this.state.search ? <Search onClose={this.toggleSearch}
-                        onSearch={this.props.onSearch}
-                        usernames={this.props.usernames}/> : undefined }
-                    </ReactCSSTransitionGroup>
-            </div>
-        );
-    }
+						<div className="right">
+							<ul>
+								{this.props.isLoggedIn ? logoutButton : loginButton}
+							</ul>
+						</div>
+					</div>
+				</nav>
+				<ReactCSSTransitionGroup transitionName="search" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+					{ /* IMPLEMENT: SHOW SEARCH WHEN SEARCH STATUS IS TRUE */}
+					{this.state.search ? <Search onClose={this.toggleSearch}
+						onSearch={this.props.onSearch}
+						usernames={this.props.usernames} /> : undefined}
+				</ReactCSSTransitionGroup>
+			</div>
+		);
+	}
 }
 
 Header.propTypes = {
-    isLoggedIn: React.PropTypes.bool,
-    onLogout: React.PropTypes.func,
-    usernames: React.PropTypes.array
+	isLoggedIn: React.PropTypes.bool,
+	onLogout: React.PropTypes.func,
+	usernames: React.PropTypes.array
 };
 
 Header.defaultProps = {
-    isLoggedIn: false,
-    onLogout: () => { console.error("logout function not defined");},
-    usernames: []
+	isLoggedIn: false,
+	onLogout: () => { console.error("logout function not defined"); },
+	usernames: []
 };
 
 export default Header;
