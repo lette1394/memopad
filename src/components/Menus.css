@@ -1,4 +1,4 @@
-.Buttons {
+.Buttons Link{
 	display: flex;
 }
 
@@ -8,7 +8,8 @@
 	align-items: center;
 	justify-content: center;
 	height: 3rem;
-
+	box-shadow: none;
+	border-radius: 0;
 	color: white;
 	font-size: 1.5rem;
 	cursor: pointer;
