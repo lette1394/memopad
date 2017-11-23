@@ -21,7 +21,7 @@ export function loginRequest(username, password) {
 
             return axios.post('/api/account/signin', { username, password })
             .then((response) => {
-                dispatch(loginSuccess(username));
+                dispatch(loginSuccess(response.data.info));
             }).catch((error) => {
                 dispatch(loginFailure());
             });
@@ -34,10 +34,10 @@ export function login() {
     };
 }
 
-export function loginSuccess(username) {
+export function loginSuccess(info) {
     return {
         type: AUTH_LOGIN_SUCCESS,
-        username
+        info
     };
 }
 
@@ -88,7 +88,7 @@ export function getStatusRequest() {
         dispatch(getStatus());
         return axios.get('/api/account/getinfo')
         .then((response) => {
-            dispatch(getStatusSuccess(response.data.info.username));
+            dispatch(getStatusSuccess(response.data.info));
         }).catch((error) => {
             dispatch(getStatusFailure());
         });
@@ -101,10 +101,10 @@ export function getStatus() {
     };
 }
 
-export function getStatusSuccess(username) {
+export function getStatusSuccess(info) {
     return {
         type: AUTH_GET_STATUS_SUCCESS,
-        username
+        info
     };
 }
 

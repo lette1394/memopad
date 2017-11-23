@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
             error: "NOT LOGGED IN",
             code: 1
         });
-    }
+    } 
 
     // CHECK CONTENTS VALID
     if(typeof req.body.contents !== 'string') {
@@ -37,10 +37,12 @@ router.post('/', (req, res) => {
 
     // CREATE NEW MEMO
     let memo = new Memo({
-        writer: req.session.loginInfo.username,
+				writer: req.session.loginInfo.username,
+				nickname: req.session.loginInfo.nickname,
         contents: req.body.contents
-    });
-
+		});
+		
+		console.log(req.session.loginInfo.nickname);
     // SAVE IN DATABASE
     memo.save( err => {
         if(err) throw err;

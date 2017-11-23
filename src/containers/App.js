@@ -20,7 +20,8 @@ class App extends React.Component {
 				// EMPTIES THE SESSION
 				let loginData = {
 					isLoggedIn: false,
-					username: ''
+					username: '',
+					nickname: ''
 				};
 
 				document.cookie = 'key=' + btoa(JSON.stringify(loginData));
@@ -61,7 +62,8 @@ class App extends React.Component {
 					// logout the session
 					loginData = {
 						isLoggedIn: false,
-						username: ''
+						username: '',
+						nickname: ''
 					};
 
 					document.cookie = 'key=' + btoa(JSON.stringify(loginData));

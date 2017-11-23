@@ -10,9 +10,6 @@ class MemoList extends React.Component {
     }
 
     render() {
-
-        
-
         const mapToComponents = data => {
             return data.map((memo, i) => {
                 return (
@@ -24,7 +21,8 @@ class MemoList extends React.Component {
                         onRemove={this.props.onRemove}
                         onStar={this.props.onStar}
                         index={i}
-                        currentUser={this.props.currentUser}
+												currentUser={this.props.currentUser}
+												currentNickname={this.props.currentNickname}
                     />
                 );
             });
@@ -45,7 +43,8 @@ class MemoList extends React.Component {
 
 MemoList.propTypes = {
     data: React.PropTypes.array,
-    currentUser: React.PropTypes.string,
+		currentUser: React.PropTypes.string,
+		currentNickname: React.PropTypes.string,
     onEdit: React.PropTypes.func,
     onRemove: React.PropTypes.func,
     onStar: React.PropTypes.func
@@ -53,7 +52,8 @@ MemoList.propTypes = {
 
 MemoList.defaultProps = {
     data: [],
-    currentUser: '',
+		currentUser: '',
+		currentNickname: '',
     onEdit: (id, index, contents) => {
         console.error('onEdit not defined');
     },

@@ -57,7 +57,8 @@ export function memoPostFailure(error) {
         - isInitial: whether it is for initial loading
         - listType:  OPTIONAL; loading 'old' memo or 'new' memo
         - id:        OPTIONAL; memo id (one at the bottom or one at the top)
-        - username:  OPTIONAL; find memos of following user
+				- username:  OPTIONAL; find memos of following user
+				- nickname:  OPTIONAL; using at show instead of username 
 */
 export function memoListRequest(isInitial, listType, id, username) {
     return (dispatch) => {
@@ -74,7 +75,7 @@ export function memoListRequest(isInitial, listType, id, username) {
             // load memos of a user
             url = isInitial ? `${url}/${username}` : `${url}/${username}/${listType}/${id}`;
         }
-
+ 
         return axios.get(url)
         .then((response) => {
             dispatch(memoListSuccess(response.data, isInitial, listType));

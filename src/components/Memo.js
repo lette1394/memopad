@@ -118,7 +118,7 @@ class Memo extends React.Component {
 		const memoView = (
 			<div className="card">
 				<div className="info">
-					<Link to={`/wall/${this.props.data.writer}`} className="username">{data.writer}</Link> wrote a log · <TimeAgo date={data.date.created} />
+					<Link to={`/wall/${this.props.data.writer}`} className="username">{data.nickname}</Link> wrote a log · <TimeAgo date={data.date.created} />
 					{this.props.data.is_edited ? editedInfo : undefined}
 					{ownership ? dropDownMenu : undefined}
 				</div>
@@ -163,13 +163,15 @@ Memo.propTypes = {
 	onEdit: React.PropTypes.func,
 	onRemove: React.PropTypes.func,
 	onStar: React.PropTypes.func,
-	currentUser: React.PropTypes.string
+	currentUser: React.PropTypes.string,
+	currentNickname: React.PropTypes.string
 };
 
 Memo.defaultProps = {
 	data: {
 		_id: 'id12367890',
 		writer: 'Writer',
+		nickname: 'nickkkk',
 		contents: 'Contents',
 		is_edited: false,
 		date: { edited: new Date(), created: new Date() },
@@ -185,7 +187,8 @@ Memo.defaultProps = {
 	onStar: (id, index) => {
 		console.error('onStar not defined');
 	},
-	currentUser: ''
+	currentUser: '',
+	currentNickname: ''
 };
 
 export default Memo;

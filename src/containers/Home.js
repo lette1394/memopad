@@ -291,7 +291,7 @@ class Home extends React.Component {
 		const emptyView = (
 			<div className="container">
 				<div className="empty-page">
-					<b>{this.props.username}</b> isn't registered or hasn't written any memo
+					<b>{this.props.nickname}</b> isn't registered or hasn't written any memo
                 </div>
 			</div>
 		);
@@ -301,7 +301,7 @@ class Home extends React.Component {
 				<div className="container wall-info">
 					<div className="card wall-info blue lighten-2 white-text">
 						<div className="card-content">
-							{this.props.username}
+							{this.props.nickname}
 						</div>
 					</div>
 				</div>
@@ -316,6 +316,7 @@ class Home extends React.Component {
 				<MemoList 
 					data={this.props.memoData} 
 					currentUser={this.props.currentUser}
+					currentNickname={this.props.currentNickname}
 					onEdit={this.handleEdit}
 					onRemove={this.handleRemove}
 					onStar={this.handleStar} />
@@ -323,13 +324,15 @@ class Home extends React.Component {
 		);
 	}
 }
-
+ 
 Home.PropTypes = {
-	username: React.PropTypes.string
+	username: React.PropTypes.string,
+	nickname: React.PropTypes.string
 };
 
 Home.defaultProps = {
-	username: undefined
+	username: undefined,
+	nickname: undefined
 };
 
 const mapStateToProps = (state) => {
@@ -337,6 +340,7 @@ const mapStateToProps = (state) => {
 		isLoggedIn: state.authentication.status.isLoggedIn,
 		postStatus: state.memo.post,
 		currentUser: state.authentication.status.currentUser,
+		currentNickname: state.authentication.status.currentNickname,
 		memoData: state.memo.list.data,
 		listStatus: state.memo.list.status,
 		isLast: state.memo.list.isLast,

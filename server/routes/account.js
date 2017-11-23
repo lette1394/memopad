@@ -108,12 +108,16 @@ router.post('/signin', (req, res) => {
 		let session = req.session;
 		session.loginInfo = {
 			_id: account._id,
-			username: account.username
+			username: account.username,
+			nickname: account.nickname
 		};
+
+		console.log("session: " + session.loginInfo.nickname);
 
 		// RETURN SUCCESS
 		return res.json({
-			success: true
+			success: true,
+			info: req.session.loginInfo
 		});
 	});
 });

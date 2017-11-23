@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const Memo = new Schema({
-    writer: String,
+		writer: String,
+		nickname: String,
     contents: String,
     starred: [String],
     date: {
