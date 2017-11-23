@@ -11,11 +11,11 @@ class Register extends React.Component {
         this.handleRegister = this.handleRegister.bind(this);
     }
 
-    handleRegister(id, pw) {
-        return this.props.registerRequest(id, pw).then(
+    handleRegister(id, pw, nick) {
+        return this.props.registerRequest(id, pw, nick).then(
             () => {
                 if(this.props.status === "SUCCESS") {
-                    Materialize.toast('Success! Please log in', 2000);
+                    Materialize.toast('회원가입 성공! 로그인 해주세요~', 2000);
                     browserHistory.push('/login');
                     return true;
                 } else {
@@ -23,12 +23,14 @@ class Register extends React.Component {
                        ERROR CODES:
                            1: BAD USERNAME
                            2: BAD PASSWORD
-                           3: USERNAME EXISTS
+													 3: USERNAME EXISTS
+													 4: NICKNAME EXISTS
                    */
                    let errorMessage = [
                        'Invalid Username',
                        'Password is too short',
-                       'Username already exists'
+											 'Username already exists',
+											 'Nickname already exists'
                    ];
 
                    let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[this.props.errorCode - 1] + '</span>');
@@ -56,8 +58,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        registerRequest: (id, pw) => {
-            return dispatch(registerRequest(id,pw));
+        registerRequest: (id, pw, nick) => {
+            return dispatch(registerRequest(id, pw, nick));
         }
     };
 };

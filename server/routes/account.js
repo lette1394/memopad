@@ -9,11 +9,13 @@ const router = express.Router();
     ERROR CODES:
         1: BAD USERNAME
         2: BAD PASSWORD
-        3: USERNAM EXISTS
+				3: USERNAME EXISTS
+				4: NICKNAME EXISTS
 */
 router.post('/signup', (req, res) => {
 	// CHECK USERNAME FORMAT
 	let usernameRegex = /^[a-z0-9]+$/;
+	let nicknameRegex = /^[가-힣a-z0-9]+$/;
 
 	if (!usernameRegex.test(req.body.username)) {
 		return res.status(400).json({
@@ -40,20 +42,30 @@ router.post('/signup', (req, res) => {
 			});
 		}
 
-		// CREATE ACCOUNT
-		let account = new Account({
-			username: req.body.username,
-			password: req.body.password
-		});
-
-		account.password = account.generateHash(account.password);
-
-		// SAVE IN THE DATABASE
-		account.save(err => {
+		Account.findOne({ nickname: req.body.nickname}, (err, exists) => {
 			if (err) throw err;
-			return res.json({ success: true });
-		});
+			if (exists) {
+				return res.status(409).json({
+					error: "NICKNAME EXISTS",
+					code: 4
+				})
+			}
 
+				// CREATE ACCOUNT
+			let account = new Account({
+				username: req.body.username,
+				password: req.body.password,
+				nickname: req.body.nickname
+			});
+			
+			account.password = account.generateHash(account.password);
+
+			// SAVE IN THE DATABASE
+			account.save(err => {
+				if (err) throw err;
+				return res.json({ success: true });
+			});
+		})
 	});
 });
 

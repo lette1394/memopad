@@ -48,13 +48,13 @@ export function loginFailure() {
 }
 
 /* REGISTER */
-export function registerRequest(username, password) {
+export function registerRequest(username, password, nickname) {
     return (dispatch) => {
         // inform register API is starting
         dispatch(register());
 
-        return axios.post('/api/account/signup', { username, password })
-        .then((reponse) => {
+        return axios.post('/api/account/signup', { username, password, nickname })
+        .then((response) => {
             dispatch(registerSuccess());
         }).catch((error) => {
             dispatch(registerFailure(error.response.data.code));

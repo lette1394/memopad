@@ -5,9 +5,10 @@ class Authentication extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
+        this.state = { 
             username: "",
-            password: ""
+						password: "",
+						nickname: ""
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
@@ -38,13 +39,16 @@ class Authentication extends React.Component {
 
     handleRegister() {
         let id = this.state.username;
-        let pw = this.state.password;
+				let pw = this.state.password;
+				let nick = this.state.nickname;
 
-        this.props.onRegister(id, pw).then(
+        this.props.onRegister(id, pw, nick).then(
             (success) => {
                 if(!success) {
                     this.setState({
-                        password: ''
+												username: '',
+												password: '',
+												nickname: ''
                     });
                 }
             }
@@ -62,10 +66,10 @@ class Authentication extends React.Component {
     }
 
     render() {
-        const inputBoxes = (
+        const loginBoxes = (
             <div>
                 <div className="input-field col s12 username">
-                    <label>Username</label>
+                    <label>ID</label>
                     <input
                     name="username"
                     type="text"
@@ -85,33 +89,67 @@ class Authentication extends React.Component {
                     onKeyPress={this.handleKeyPress}/>
                 </div>
             </div>
-        );
+				);
+				
+				const registerBoxes = (
+					<div>
+							<div className="input-field col s12 username">
+									<label>ID</label>
+									<input
+									name="username"
+									type="text"
+									className="validate"
+									value={this.state.username}
+									onChange={this.handleChange}
+									/>
+							</div>
+							<div className="input-field col s12">
+									<label>Password</label>
+									<input
+									name="password"
+									type="password"
+									className="validate"
+									value={this.state.password}
+									onChange={this.handleChange}
+									/>
+							</div>
+							<div className="input-field col s12 username">
+									<label>Nickname (보여지는 이름입니다)</label>
+									<input
+									name="nickname"
+									type="text"
+									className="validate"
+									value={this.state.nickname}
+									onChange={this.handleChange}
+									onKeyPress={this.handleKeyPress}
+									/>
+							</div>
+					</div>
+			);
+
 
         const loginView = (
             <div>
                 <div className="card-content">
                     <div className="row">
-                        { inputBoxes }
+                        { loginBoxes }
                         <a onClick={this.handleLogin} className="waves-effect waves-light btn">SUBMIT</a>
                     </div>
                 </div>
-
-
                 <div className="footer">
                     <div className="card-content">
                         <div className="right" >
-                        New Here? <Link to="/register">Create an account</Link>
+                        처음이신가요? <Link to="/register">회원가입</Link>
                         </div>
                     </div>
                 </div>
-
             </div>
         );
 
         const registerView = (
            <div className="card-content">
                <div className="row">
-                   { inputBoxes }
+                   { registerBoxes }
                    <a onClick={this.handleRegister} className="waves-effect waves-light btn">CREATE</a>
                </div>
            </div>
@@ -141,7 +179,7 @@ Authentication.propTypes = {
 Authentication.defaultProps = {
     mode: true,
     onLogin: (id, pw) => { console.error("onLogin not defined"); },
-    onRegister: (id, pw) => { console.error("onRegister not defined"); }
+    onRegister: (id, pw, nick) => { console.error("onRegister not defined"); }
 };
 
 export default Authentication;
