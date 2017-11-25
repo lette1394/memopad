@@ -1,6 +1,6 @@
 body {
     background-color: #ECEFF1;
-    overflow-x: hidden;
+		overflow-x: hidden;
 }
 
 /* Authentication */
@@ -70,7 +70,25 @@ a {
 
 /* wrapper */
 .wrapper {
-    margin-top: 20px;
+		margin-top: 100px;
+		z-index: 100;
+}
+
+.fixed {
+	position: fixed;
+	top: 0px;
+	margin-bottom: 40px;
+	z-index: 30;
+}
+
+/*이거 수정해야됨..*/
+.sideNav {
+	position: relative;
+	z-index: 50;
+}
+
+#sidenav-overlay {
+	z-index: 10;
 }
 
 /* WRITE */
@@ -90,12 +108,17 @@ a {
     text-align: right;
 }
 
+.container.write {
+	margin-top: 100px;
+	height: 200px;
+}
+
 
 /* Memo */
 
 .memo .info {
     font-size: 18px;
-    padding: 20px 20px 40px 20px;
+    padding: 20px 20px 20px 20px;
     color: #90A4AE;
 }
 
@@ -339,4 +362,34 @@ ul.search-results {
     animation-duration: 0.3s;
     -webkit-animation-name: search-leave;
     animation-name: search-leave;
+}
+
+
+/* LOGIN */
+
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.example-appear {
+  opacity: 0.01;
+}
+
+.example-appear.example-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
 }

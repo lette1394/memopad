@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Authentication extends React.Component {
 
@@ -156,15 +157,23 @@ class Authentication extends React.Component {
        );
 
         return(
+					<ReactCSSTransitionGroup 
+					transitionName="example" 
+					transitionAppear={true}
+				> 
             <div className="container auth">
-                <Link className="logo" to="/">MEMOPAD</Link>
+                <Link className="logo" to="/">Sasanghwal</Link>
                 <div className="card">
-                    <div className="header blue white-text center">
+                    <div className="header red darken-2 white-text center">
                         <div className="card-content">{this.props.mode ? "LOGIN" : "REGISTER"}</div>
                     </div>
-                    {this.props.mode ? loginView : registerView }
+										
+																				
+										{this.props.mode ? loginView : registerView }
+										
                 </div>
             </div>
+						</ReactCSSTransitionGroup>
         );
     }
 

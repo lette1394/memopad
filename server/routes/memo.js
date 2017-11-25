@@ -25,14 +25,14 @@ router.post('/', (req, res) => {
         return res.status(400).json({
             error: "EMPTY CONTENTS",
             code: 2
-        });
+				});
     }
 
     if(req.body.contents === "") {
         return res.status(400).json({
             error: "EMPTY CONTENTS",
             code: 2
-        });
+				});	
     }
 
     // CREATE NEW MEMO

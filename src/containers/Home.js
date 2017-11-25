@@ -312,7 +312,7 @@ class Home extends React.Component {
 		return (
 			<div className="wrapper">
 				{typeof this.props.username !== 'undefined' ? wallHeader : undefined}
-				{this.props.isLoggedIn ? <Write onPost={this.handlePost} /> : undefined}
+				{/* {this.props.isLoggedIn ? <Write onPost={this.handlePost} /> : undefined} */}
 				<MemoList 
 					data={this.props.memoData} 
 					currentUser={this.props.currentUser}

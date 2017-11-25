@@ -23,7 +23,7 @@ class Login extends React.Component {
 
 					document.cookie = 'key=' + btoa(JSON.stringify(loginData));
 
-					Materialize.toast('환영합니다 ' + id + '님!', 2000);
+					Materialize.toast('환영합니다 ' + id + '님!', 4000);
 					browserHistory.push('/');
 					return true;
 				} else {

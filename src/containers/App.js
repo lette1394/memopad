@@ -69,7 +69,7 @@ class App extends React.Component {
 					document.cookie = 'key=' + btoa(JSON.stringify(loginData));
 
 					// and notify
-					let $toastContent = $('<span style="color: #FFB4BA">Your session is expired, please log in again</span>');
+					let $toastContent = $('<span style="color: #FFB4BA">세션이 만료되었습니다. 다시 로그인 해주세요.</span>');
 					Materialize.toast($toastContent, 4000);
 				}
 			}
@@ -83,7 +83,6 @@ class App extends React.Component {
 
 		return (
 			<div>
-				{isAuth ? undefined : <Menus /> }
 				{isAuth ? undefined : <Header isLoggedIn={this.props.status.isLoggedIn}
 					onLogout={this.handleLogout}
 					onSearch={this.handleSearch}

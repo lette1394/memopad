@@ -1,62 +1,100 @@
 import React from 'react';
-import { Authentication } from 'components';
 import { connect } from 'react-redux';
-import { loginRequest } from 'actions/authentication';
+import { memoPostRequest } from 'actions/memo';
 import { browserHistory } from 'react-router';
 
-
-class WriteContainer extends React.Component {
+class Write extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.handleLogin = this.handleLogin.bind(this);
+		this.state = {
+			contents: ''
+		};
+		this.handleChange = this.handleChange.bind(this);
+		this.handlePost = this.handlePost.bind(this);
 	}
 
-	handleLogin(id, pw) {
-		return this.props.loginRequest(id, pw).then(
+	handleChange(e) {
+		this.setState({
+			contents: e.target.value
+		});
+	}
+
+	handlePost() {
+		let contents = this.state.contents;
+		return this.props.memoPostRequest(contents).then(
 			() => {
-				if (this.props.status === "SUCCESS") {
-					let loginData = {
-						isLoggedIn: true,
-						username: id
-					};
-
-					document.cookie = 'key=' + btoa(JSON.stringify(loginData));
-
-					Materialize.toast('환영합니다 ' + id + '님!', 2000);
+				if (this.props.postStatus.status === "SUCCESS") {
+					Materialize.toast("저장되었습니다.", 4000);
 					browserHistory.push('/');
-					return true;
 				} else {
-					let $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-					Materialize.toast($toastContent, 2000);
-					return false;
+					/*
+							ERROR CODES
+									1: NOT LOGGED IN
+									2: EMPTY CONTENTS
+					*/
+
+					let $toastContent;
+					switch (this.props.postStatus.error) {
+						case 1:
+							// IF NOT LOGGED IN, NOTIFY AND REFRESH AFTER
+							$toastContent = $('<span style="color: #FFB4BA">You are not logged in</span>');
+							Materialize.toast($toastContent, 2000);
+							setTimeout(() => { location.reload(false); }, 2000);
+							break;
+						case 2:
+							$toastContent = $('<span style="color: #FFB4BA">Please write something</span>');
+							Materialize.toast($toastContent, 2000);
+							break;
+						default:
+							$toastContent = $('<span style="color: #FFB4BA">Something Broke</span>');
+							Materialize.toast($toastContent, 2000);
+							break;
+					}
 				}
 			}
 		);
 	}
 
+
 	render() {
 		return (
-			<div>
-				<Authentication mode={true}
-					onLogin={this.handleLogin} />
+			<div className="container write">
+				<div className="card">
+					<div className="card-content">
+						<textarea className="materialize-textarea" placeholder="내용을 입력해주세요"
+							value={this.state.contents}
+							onChange={this.handleChange}></textarea>
+					</div>
+					<div className="card-action">
+						<a onClick={this.handlePost}>POST</a>
+					</div>
+				</div>
 			</div>
 		);
 	}
 }
 
+Write.PropTypes = {
+	onPost: React.PropTypes.func
+};
+
+Write.defaultProps = {
+	onPost: (contents) => { console.error('onPost not defined'); },
+};
+
 const mapStateToProps = (state) => {
 	return {
-		status: state.authentication.login.status
+		postStatus: state.memo.post
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		loginRequest: (id, pw) => {
-			return dispatch(loginRequest(id, pw));
+		memoPostRequest: (contents) => {
+			return dispatch(memoPostRequest(contents));
 		}
 	};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(WriteContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(Write);

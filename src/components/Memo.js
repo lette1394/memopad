@@ -123,7 +123,9 @@ class Memo extends React.Component {
 					{ownership ? dropDownMenu : undefined}
 				</div>
 				<div className="card-content">
-					{data.contents}
+					<p className='flow-text'>
+						{data.contents} 
+					</p>
 				</div>
 				<div className="footer">
 					<i className="material-icons log-footer-icon star icon-button" style={starStyle} onClick={this.handleStar}>star</i>
