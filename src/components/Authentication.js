@@ -147,7 +147,7 @@ class Authentication extends React.Component {
 									/>
 							</div>
 							<div className="input-field col s12 username">
-									<label>Nickname (보여지는 이름입니다)</label>
+									<label>Nickname (보여지는 이름)</label>
 									<input
 									name="nickname"
 									type="text"
@@ -191,18 +191,14 @@ class Authentication extends React.Component {
         return(
 					<ReactCSSTransitionGroup 
 					transitionName="example" 
-					transitionAppear={true}
-				> 
+					transitionAppear={true}> 
             <div className="container auth">
                 <Link className="logo" to="/">Sasanghwal</Link>
                 <div className="card">
                     <div className="header red darken-2 white-text center">
                         <div className="card-content">{this.props.mode ? "LOGIN" : "REGISTER"}</div>
                     </div>
-										
-																				
 										{this.props.mode ? loginView : registerView }
-										
                 </div>
             </div>
 						</ReactCSSTransitionGroup>

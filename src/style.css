@@ -393,3 +393,17 @@ ul.search-results {
   opacity: 1;
   transition: opacity .5s ease-in;
 }
+
+
+/* Modify */
+
+.btn.modify {
+	width: 40%;
+	margin: 1rem;
+}
+
+.btn.cancle {
+	width: 40%;
+	margin: 1rem;
+	background: rgb(230, 50, 50);
+}

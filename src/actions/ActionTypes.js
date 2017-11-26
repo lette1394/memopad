@@ -39,3 +39,10 @@ export const MEMO_STAR_FAILURE = "MEMO_STAR_FAILURE";
 export const SEARCH = "SEARCH";
 export const SEARCH_SUCCESS = "SEARCH_SUCCESS";
 export const SEARCH_FAILURE = "SEARCH_FAILURE";
+
+
+/* Modify */
+
+export const AUTH_MODIFY = "AUTH_MODIFY";
+export const AUTH_MODIFY_SUCCESS = "AUTH_MODIFY_SUCCESS";
+export const AUTH_MODIFY_FAILURE = "AUTH_MODIFY_FAILURE";

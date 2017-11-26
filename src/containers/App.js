@@ -74,11 +74,10 @@ class App extends React.Component {
 				}
 			}
 		);
-
 	}
 
 	render() {
-		let re = /(login|register)/;
+		let re = /(login|register|modify)/;
 		let isAuth = re.test(this.props.location.pathname);
 
 		return (

@@ -15,7 +15,7 @@ class Register extends React.Component {
         return this.props.registerRequest(id, pw, nick).then(
             () => {
                 if(this.props.status === "SUCCESS") {
-                    Materialize.toast('회원가입 성공! 로그인 해주세요~', 2000);
+                    Materialize.toast('회원가입 성공!', 4000);
                     browserHistory.push('/login');
                     return true;
                 } else {
@@ -25,12 +25,14 @@ class Register extends React.Component {
                            2: BAD PASSWORD
 													 3: USERNAME EXISTS
 													 4: NICKNAME EXISTS
+													 5: BAD NICKNAME
                    */
                    let errorMessage = [
-                       'Invalid Username',
-                       'Password is too short',
-											 'Username already exists',
-											 'Nickname already exists'
+                       '불가능한 ID 입니다, ID는 영대소문자 및 숫자로 구성해주세요',
+                       '비밀번호는 4자리 이상이어야 합니다',
+											 '이미 사용중인 ID 입니다',
+											 '이미 사용중인 닉네임 입니다',
+											 '불가능한 닉네임 입니다'
                    ];
 
                    let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[this.props.errorCode - 1] + '</span>');

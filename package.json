@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "async": "^2.6.0",
     "axios": "^0.13.1",
     "babel-polyfill": "^6.9.1",
     "bcryptjs": "^2.3.0",

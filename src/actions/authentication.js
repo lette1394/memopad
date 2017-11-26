@@ -8,7 +8,10 @@ import {
     AUTH_GET_STATUS,
     AUTH_GET_STATUS_SUCCESS,
     AUTH_GET_STATUS_FAILURE,
-    AUTH_LOGOUT
+		AUTH_LOGOUT,
+		AUTH_MODIFY,
+		AUTH_MODIFY_SUCCESS,
+		AUTH_MODIFY_FAILURE
 } from './ActionTypes';
 import axios from 'axios';
 
@@ -80,6 +83,45 @@ export function registerFailure(error) {
         error
     };
 }
+
+
+/* Modify */
+
+export function modifyRequest(username, password, nickname) {
+	return (dispatch) => {
+			// inform register API is starting
+			dispatch(modify());
+			
+			return axios.put('/api/account/modify/' + username, { password, nickname })
+			.then((response) => {
+					dispatch(modifySuccess());
+			}).catch((error) => {
+					dispatch(modifyFailure(error.response.data.code));
+			});
+	};
+}
+
+
+export function modify() {
+	return {
+			type: AUTH_MODIFY
+	};
+}
+
+export function modifySuccess() {
+	return {
+			type: AUTH_MODIFY_SUCCESS,
+	};
+}
+
+export function modifyFailure(error) {
+	return {
+			type: AUTH_MODIFY_FAILURE,
+			error
+	};
+}
+
+
 
 /* GET STATUS */
 

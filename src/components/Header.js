@@ -26,7 +26,7 @@ class Header extends React.Component {
 	render() {
 		const loginButton = (
 			<li>
-				<Link to="/login"><i className="material-icons">vpn_key</i>로그인 해주세요</Link>
+				<Link to="/login"><i className="material-icons">vpn_key</i>로그인</Link>
 			</li>
 		);
 
@@ -40,7 +40,7 @@ class Header extends React.Component {
 			<div className='sideNav'>
 				<SideNav
 					trigger={<a data-activates="slide-out" class="button -collapse"><i className="material-icons">menu</i></a>}
-					options={{ closeOnClick: true }}
+					options={{ closeOnClick: true, menuWidth: '30%' }}
 				>
 					<SideNavItem userView
 						user={{
@@ -53,8 +53,8 @@ class Header extends React.Component {
 					<SideNavItem>{this.props.isLoggedIn ? logoutButton : loginButton}</SideNavItem>
 					<SideNavItem divider />
 					<SideNavItem subheader>회원메뉴</SideNavItem>
-					{ this.props.isLoggedIn ? <Link to="/write"><SideNavItem waves icon='create'>글쓰기</SideNavItem></Link> : undefined }
-					{ this.props.isLoggedIn ? <Link to="/modify"><SideNavItem waves icon='assignment_ind'>회원정보수정</SideNavItem></Link> : undefined }
+					{ this.props.isLoggedIn ? <Link to="/write"><SideNavItem icon='create'>글쓰기</SideNavItem></Link> : undefined }
+					{ this.props.isLoggedIn ? <Link to="/modify"><SideNavItem icon='assignment_ind'>회원정보수정</SideNavItem></Link> : undefined }
 					<SideNavItem waves>Third Link With Waves</SideNavItem>
 				</SideNav>
 			</div>
@@ -68,7 +68,7 @@ class Header extends React.Component {
 					
 						<ul>
 							<li>{sideNavigation}</li>
-							<li><a onClick={this.toggleSearch}><i className="material-icons">search</i></a></li>
+							<li className='right'><a onClick={this.toggleSearch}><i className="material-icons">search</i></a></li>
 						</ul>
 					</div>
 				</nav>

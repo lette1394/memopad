@@ -1,5 +1,6 @@
 import express from 'express';
 import Account from '../models/account';
+import async from 'async';
 
 const router = express.Router();
 
@@ -14,13 +15,20 @@ const router = express.Router();
 */
 router.post('/signup', (req, res) => {
 	// CHECK USERNAME FORMAT
-	let usernameRegex = /^[a-z0-9]+$/;
-	let nicknameRegex = /^[가-힣a-z0-9]+$/;
+	let usernameRegex = /^[A-Za-z0-9]+$/;
+	let nicknameRegex = /^[가-힣A-Za-z0-9_]+$/;
 
 	if (!usernameRegex.test(req.body.username)) {
 		return res.status(400).json({
 			error: "BAD USERNAME",
 			code: 1
+		});
+	}
+
+	if (!nicknameRegex.test(req.body.username)) {
+		return res.status(400).json({
+			error: "BAD NICKNAME",
+			code: 5
 		});
 	}
 
@@ -42,7 +50,7 @@ router.post('/signup', (req, res) => {
 			});
 		}
 
-		Account.findOne({ nickname: req.body.nickname}, (err, exists) => {
+		Account.findOne({ nickname: req.body.nickname }, (err, exists) => {
 			if (err) throw err;
 			if (exists) {
 				return res.status(409).json({
@@ -51,13 +59,13 @@ router.post('/signup', (req, res) => {
 				})
 			}
 
-				// CREATE ACCOUNT
+			// CREATE ACCOUNT
 			let account = new Account({
 				username: req.body.username,
 				password: req.body.password,
 				nickname: req.body.nickname
 			});
-			
+
 			account.password = account.generateHash(account.password);
 
 			// SAVE IN THE DATABASE
@@ -112,8 +120,6 @@ router.post('/signin', (req, res) => {
 			nickname: account.nickname
 		};
 
-		console.log("session: " + session.loginInfo.nickname);
-
 		// RETURN SUCCESS
 		return res.json({
 			success: true,
@@ -162,6 +168,80 @@ router.get('/search/:nickname', (req, res) => {
 // EMPTY SEARCH REQUEST: GET /api/account/search
 router.get('/search', (req, res) => {
 	res.json([]);
+});
+
+
+//MODIFY accounts: PUT /api/account/modify
+
+router.put('/modify/:username', (req, res) => {
+	Account.findOne({ username: req.params.username }, (err, change) => {
+		if (err) return res.status(500).json({ error: 'db fail' })
+		if (!change) return res.status(404).json({ erorr: 'account not found' })
+
+		let tempStatus = { success: true };
+
+		//CHECK PASS
+		const checkPass = (callback) => {
+			if (req.body.password) {
+				// CHECK PASS LENGTH
+				if (req.body.password.length < 4 || typeof req.body.password !== "string") {
+					callback(null, true);		
+					tempStatus = {
+						error: "BAD PASSWORD",
+						code: 2
+					}	
+				}
+				change.password = change.generateHash(req.body.password);
+				change.save((err) => {
+					if (err) res.status(500).json({ error: "fail to update" })
+				})
+				callback(null, false);
+			}		
+		}
+
+		//CHECK NICKNAME
+		const checkNick = (callback) => {
+			if (req.body.nickname) {
+				// CHECK nickname FORMAT
+				let nicknameRegex = /^[가-힣A-Za-z0-9_]+$/;
+				if (!nicknameRegex.test(req.body.nickname)) {
+					callback(null, true);					
+					tempStatus = {
+						error: "BAD NICKNAME",
+						code: 5
+					};
+				}
+
+				// CHECK NICKNAME EXISTANCE
+				Account.findOne({ nickname: req.body.nickname }, (err, exists) => {
+					let called = false;
+
+					if (err) throw err;
+					if (exists) {
+						callback(null, true);			
+						called = true;						
+						tempStatus = {
+							error: "NICKNAME EXISTS",
+							code: 4
+						}
+					}
+
+					change.nickname = req.body.nickname;
+					change.save((err) => {
+						if (err) res.status(500).json({ error: "fail to update" })
+					})
+					if (!called) {
+						callback(null, false);
+					}
+				});
+			}		
+		}
+
+		let tasks = [checkNick, checkPass];
+		async.series(tasks, (err, result) => {			
+			return res.json(tempStatus);
+		})
+	});
 });
 
 export default router;
