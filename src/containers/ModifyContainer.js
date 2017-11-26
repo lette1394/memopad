@@ -1,11 +1,11 @@
 import React from 'react';
-import { Authentication } from 'components';
+import { Modify } from 'components';
 import { connect } from 'react-redux';
 import { loginRequest } from 'actions/authentication';
 import { browserHistory } from 'react-router';
 
 
-class Modify extends React.Component {
+class ModifyContainer extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -38,8 +38,7 @@ class Modify extends React.Component {
 	render() {
 		return (
 			<div>
-				<Authentication mode={true}
-					onLogin={this.handleLogin} />
+				<Modify />
 			</div>
 		);
 	}
@@ -59,4 +58,4 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Modify);
+export default connect(mapStateToProps, mapDispatchToProps)(ModifyContainer);

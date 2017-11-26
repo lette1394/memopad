@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Menus } from 'components';
+import { Header } from 'components';
 import { connect } from 'react-redux';
 import { getStatusRequest, logoutRequest } from 'actions/authentication';
 import { searchRequest } from 'actions/search';

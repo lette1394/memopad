@@ -24,7 +24,6 @@ class Header extends React.Component {
 	}
 
 	render() {
-
 		const loginButton = (
 			<li>
 				<Link to="/login"><i className="material-icons">vpn_key</i>로그인 해주세요</Link>
@@ -40,7 +39,7 @@ class Header extends React.Component {
 		const sideNavigation = (
 			<div className='sideNav'>
 				<SideNav
-					trigger={<i className="material-icons">menu</i>}
+					trigger={<a data-activates="slide-out" class="button -collapse"><i className="material-icons">menu</i></a>}
 					options={{ closeOnClick: true }}
 				>
 					<SideNavItem userView
@@ -55,7 +54,7 @@ class Header extends React.Component {
 					<SideNavItem divider />
 					<SideNavItem subheader>회원메뉴</SideNavItem>
 					{ this.props.isLoggedIn ? <Link to="/write"><SideNavItem waves icon='create'>글쓰기</SideNavItem></Link> : undefined }
-					{ this.props.isLoggedIn ? <Link to="/write"><SideNavItem waves icon='assignment_ind'>회원정보수정</SideNavItem></Link> : undefined }
+					{ this.props.isLoggedIn ? <Link to="/modify"><SideNavItem waves icon='assignment_ind'>회원정보수정</SideNavItem></Link> : undefined }
 					<SideNavItem waves>Third Link With Waves</SideNavItem>
 				</SideNav>
 			</div>
@@ -68,7 +67,7 @@ class Header extends React.Component {
 						<Link to="/" className="brand-logo center">TIMELINE</Link>
 					
 						<ul>
-							<li><a href="#" data-activates="slide-out" class="button -collapse">{sideNavigation}</a></li>
+							<li>{sideNavigation}</li>
 							<li><a onClick={this.toggleSearch}><i className="material-icons">search</i></a></li>
 						</ul>
 					</div>
