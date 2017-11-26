@@ -147,12 +147,12 @@ router.post('/logout', (req, res) => {
 /*
     SEARCH USER: GET /api/account/search/:username
 */
-router.get('/search/:username', (req, res) => {
+router.get('/search/:nickname', (req, res) => {
 	// SEARCH USERNAMES THAT STARTS WITH GIVEN KEYWORD USING REGEX
-	var re = new RegExp('^' + req.params.username);
-	Account.find({ username: { $regex: re } }, { _id: false, username: true })
+	var re = new RegExp('^' + req.params.nickname);
+	Account.find({ nickname: { $regex: re } }, { _id: false, username: true, nickname: true })
 		.limit(5)
-		.sort({ username: 1 })
+		.sort({ nickname: 1 })
 		.exec((err, accounts) => {
 			if (err) throw err;
 			res.json(accounts);

@@ -86,7 +86,8 @@ class App extends React.Component {
 				{isAuth ? undefined : <Header isLoggedIn={this.props.status.isLoggedIn}
 					onLogout={this.handleLogout}
 					onSearch={this.handleSearch}
-					usernames={this.props.searchResults} />}
+					accounts={this.props.searchAccounts} 
+					/>}
 				{this.props.children}
 			</div>
 		);
@@ -97,7 +98,7 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		status: state.authentication.status,
-		searchResults: state.search.usernames
+		searchAccounts: state.search.accounts
 	};
 };
 

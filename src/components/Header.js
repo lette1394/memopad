@@ -76,7 +76,7 @@ class Header extends React.Component {
 				<ReactCSSTransitionGroup transitionName="search" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
 					{this.state.search ? <Search onClose={this.toggleSearch}
 						onSearch={this.props.onSearch}
-						usernames={this.props.usernames} /> : undefined}
+						searchAccounts={this.props.accounts} /> : undefined}
 				</ReactCSSTransitionGroup>
 			</div>
 		);
@@ -86,13 +86,13 @@ class Header extends React.Component {
 Header.propTypes = {
 	isLoggedIn: React.PropTypes.bool,
 	onLogout: React.PropTypes.func,
-	usernames: React.PropTypes.array
+  accounts: React.PropTypes.array
 };
 
 Header.defaultProps = {
 	isLoggedIn: false,
 	onLogout: () => { console.error("logout function not defined"); },
-	usernames: []
+	accounts: []
 };
 
 export default Header;

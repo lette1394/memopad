@@ -47,8 +47,8 @@ class Search extends React.Component {
 	handleKeyDown(e) {
 		// IF PRESSED ENTER, TRIGGER TO NAVIGATE TO THE FIRST USER SHOWN
 		if (e.keyCode === 13) {
-			if (this.props.usernames.length > 0) {
-				browserHistory.push('/wall/' + this.props.usernames[0].username);
+			if (this.props.searchAccounts.length > 0) {
+				browserHistory.push('/wall/' + this.props.searchAccounts[0].username);
 				this.handleClose();
 			}
 		}
@@ -73,10 +73,10 @@ class Search extends React.Component {
 		};
 
 		const mapDataToLinks = (data) => {
-			return data.map((user, i) => {
+			return data.map((account, i) => {
 				return (
-					<Link onClick={this.handleClose} to={`/wall/${user.username}`} key={i}>
-						{user.username}
+					<Link onClick={this.handleClose} to={`/wall/${account.username}`} key={i}>
+						{account.nickname}
 					</Link>
 				);
 			});
@@ -94,7 +94,7 @@ class Search extends React.Component {
 						onChange={this.handleChange}
 						onKeyDown={this.handleKeyDown}></input>
 					<ul className="search-results">
-						{mapDataToLinks(this.props.usernames)}
+						{mapDataToLinks(this.props.searchAccounts)}
 					</ul>
 
 				</div>
@@ -106,7 +106,7 @@ class Search extends React.Component {
 Search.propTypes = {
 	onClose: React.PropTypes.func,
 	onSearch: React.PropTypes.func,
-	usernames: React.PropTypes.array
+	searchAccounts: React.PropTypes.array
 };
 
 Search.defaultProps = {
@@ -116,7 +116,7 @@ Search.defaultProps = {
 	onSearch: () => {
 		console.error('onSearch not defined');
 	},
-	usernames: []
+	searchAccounts: []
 };
 
 export default Search;

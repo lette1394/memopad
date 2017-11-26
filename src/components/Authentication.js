@@ -9,6 +9,7 @@ class Authentication extends React.Component {
         this.state = { 
             username: "",
 						password: "",
+						password_confirm: "",
 						nickname: ""
         };
         this.handleChange = this.handleChange.bind(this);
@@ -41,7 +42,27 @@ class Authentication extends React.Component {
     handleRegister() {
         let id = this.state.username;
 				let pw = this.state.password;
+				let confirm = this.state.password_confirm;
 				let nick = this.state.nickname;
+
+				if(!pw || !id || !confirm || !nick) {
+					Materialize.toast("모든 항목을 작성해주세요.", 4000);
+					return ;
+				}
+
+				if(confirm !== pw) {
+					Materialize.toast("비밀번호가 일치하지 않습니다.", 4000);
+					this.setState({
+						password: '',
+						password_confirm: ''
+					});
+					return ;
+				}
+
+				if (!nick) {
+					Materialize.toast("닉네임을 입력해 주세요.", 4000);
+					return ;					
+				}
 
         this.props.onRegister(id, pw, nick).then(
             (success) => {
@@ -49,6 +70,7 @@ class Authentication extends React.Component {
                     this.setState({
 												username: '',
 												password: '',
+												password_confirm: '',
 												nickname: ''
                     });
                 }
@@ -111,6 +133,16 @@ class Authentication extends React.Component {
 									type="password"
 									className="validate"
 									value={this.state.password}
+									onChange={this.handleChange}
+									/>
+							</div>
+							<div className="input-field col s12">
+									<label>Password Confirm</label>
+									<input
+									name="password_confirm"
+									type="password"
+									className="validate"
+									value={this.state.password_confirm}
 									onChange={this.handleChange}
 									/>
 							</div>

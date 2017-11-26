@@ -25,16 +25,17 @@ export function search() {
     };
 }
 
-export function searchSuccess(usernames) {
-    console.log(usernames);
+export function searchSuccess(accounts) {
     return {
         type: SEARCH_SUCCESS,
-        usernames
+        accounts
     };
 }
 
 export function searchFailure() {
+		let blank = [];
     return {
-        type: SEARCH_FAILURE
+				type: SEARCH_FAILURE,
+				blank
     };
 }

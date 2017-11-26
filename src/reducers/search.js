@@ -3,7 +3,7 @@ import update from 'react-addons-update';
 
 const initialState = {
     status: 'INIT',
-    usernames: []
+		accounts: []
 };
 
 export default function search(state, action) {
@@ -18,12 +18,11 @@ export default function search(state, action) {
         case types.SEARCH_SUCCESS:
             return update(state, {
                 status: { $set: 'SUCCESS' },
-                usernames: { $set: action.usernames }
+								accounts: { $set: action.accounts }
             });
         case types.SEARCH_FAILURE:
             return update(state, {
-                status: { $set: 'FAILURE' },
-                usernames: []
+                status: { $set: 'FAILURE' }
             });
         default:
             return state;
