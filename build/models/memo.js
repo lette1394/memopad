@@ -14,6 +14,7 @@ var Schema = _mongoose2.default.Schema;
 
 var Memo = new Schema({
     writer: String,
+    nickname: String,
     contents: String,
     starred: [String],
     date: {

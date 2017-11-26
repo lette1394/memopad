@@ -54,9 +54,11 @@ router.post('/', function (req, res) {
     // CREATE NEW MEMO
     var memo = new _memo2.default({
         writer: req.session.loginInfo.username,
+        nickname: req.session.loginInfo.nickname,
         contents: req.body.contents
     });
 
+    console.log(req.session.loginInfo.nickname);
     // SAVE IN DATABASE
     memo.save(function (err) {
         if (err) throw err;
