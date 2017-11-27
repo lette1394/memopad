@@ -13,6 +13,7 @@ class MemoList extends React.Component {
         const mapToComponents = data => {
             return data.map((memo, i) => {
                 return (
+									
                     <Memo
                         data={memo}
                         ownership={ memo.writer===this.props.currentUser }
@@ -24,19 +25,20 @@ class MemoList extends React.Component {
 												currentUser={this.props.currentUser}
 												currentNickname={this.props.currentNickname}
                     />
+										
                 );
             });
         };
 
         return(
-            <div>
                 <ReactCSSTransitionGroup
                     transitionName="memo"
                     transitionEnterTimeout={2000}
                     transitionLeaveTimeout={1000}>
-                    {mapToComponents(this.props.data)}
+										<div className="flex-wrapper">
+											{mapToComponents(this.props.data)}
+										</div>
                 </ReactCSSTransitionGroup>
-            </div>
         );
     }
 }

@@ -115,6 +115,59 @@ a {
 
 
 /* Memo */
+.flex-wrapper {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+
+.memo {
+	margin-bottom: 3rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+	position:relative;       
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.memo:before, .memo:after
+{
+	content:"";
+    position:absolute; 
+    z-index:-1;
+    box-shadow:0 0 1px rgba(0,0,0,0.8);
+    top:50%;
+    bottom:0;
+    left:10px;
+    right:10px;
+    border-radius:100px / 10px;
+}
+
+/* response */
+@media all and (max-width:800px) {
+	.memo {
+		width: 90%;		
+	}
+}
+
+/* response */
+@media all and (min-width:800px) and (max-width:1400px) {
+	.memo {
+		width: 40%;
+	}
+}
+
+/* response */
+@media all and (min-width:1400px) {
+	.memo {
+		width: 30%;	
+	}
+}
+
+.card {
+	margin: 0px;
+}
 
 .memo .info {
     font-size: 18px;
@@ -130,7 +183,7 @@ a {
 
 .memo .card-content {
     word-wrap: break-word;
-    white-space: pre-wrap;
+		white-space: pre-wrap;
 }
 
 .icon-button {

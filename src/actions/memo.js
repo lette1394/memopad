@@ -26,7 +26,7 @@ export function memoPostRequest(contents) {
         .then((response) => {
             dispatch(memoPostSuccess());
         }).catch((error) => {
-            dispatch(memoPostError(error.response.data.code));
+            dispatch(memoPostFailure(error.response.data.code));
         });
     };
 }
@@ -187,7 +187,7 @@ export function memoStarRequest(id, index) {
             dispatch(memoStarSuccess(index, response.data.memo));
         }).catch((error) => {
             console.log(error);
-            dispatch(memoStarFailure());
+            dispatch(memoStarFailure(error.response.data.code));
         });
     };
 }

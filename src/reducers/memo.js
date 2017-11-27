@@ -160,7 +160,7 @@ export default function memo(state, action) {
                     }
                 }
             });
-        case types.MEMO_STAR_FAILURE:
+        case types.MEMO_STAR_FAILURE: 
             return update(state, {
                 star: {
                     status: { $set: 'FAILURE' },

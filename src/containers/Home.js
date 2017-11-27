@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Write, MemoList } from 'components';
+import { browserHistory } from 'react-router';
 import {
 	memoPostRequest,
 	memoListRequest,
@@ -8,6 +9,7 @@ import {
 	memoRemoveRequest,
 	memoStarRequest
 } from 'actions/memo';
+
 
 
 class Home extends React.Component {
@@ -132,7 +134,7 @@ class Home extends React.Component {
 		return this.props.memoListRequest(false, 'old', lastId, this.props.username).then(() => {
 			// IF IT IS LAST PAGE, NOTIFY
 			if (this.props.isLast) {
-				Materialize.toast('You are reading the last page', 2000);
+				Materialize.toast('마지막 페이지 입니다', 2000);
 			}
 		});
 	}
@@ -159,17 +161,17 @@ class Home extends React.Component {
 					switch (this.props.postStatus.error) {
 						case 1:
 							// IF NOT LOGGED IN, NOTIFY AND REFRESH AFTER
-							$toastContent = $('<span style="color: #FFB4BA">You are not logged in</span>');
-							Materialize.toast($toastContent, 2000);
-							setTimeout(() => { location.reload(false); }, 2000);
+							$toastContent = $('<span style="color: #FFB4BA">로그인이 필요합니다</span>');
+							Materialize.toast($toastContent, 4000);
+							setTimeout(() => { location.reload(false); }, 4000);
 							break;
 						case 2:
-							$toastContent = $('<span style="color: #FFB4BA">Please write something</span>');
-							Materialize.toast($toastContent, 2000);
+							$toastContent = $('<span style="color: #FFB4BA">내용을 입력해 주세요</span>');
+							Materialize.toast($toastContent, 4000);
 							break;
 						default:
-							$toastContent = $('<span style="color: #FFB4BA">Something Broke</span>');
-							Materialize.toast($toastContent, 2000);
+							$toastContent = $('<span style="color: #FFB4BA">에러</span>');
+							Materialize.toast($toastContent, 4000);
 							break;
 					}
 				}
@@ -192,10 +194,10 @@ class Home extends React.Component {
 				*/
 				let errorMessage = [
 					'Something broke',
-					'Please write soemthing',
-					'You are not logged in',
-					'That memo does not exist anymore',
-					'You do not have permission'
+					'내용을 입력해 주세요',
+					'로그인이 필요합니다',
+					'메모가 삭제되었습니다',
+					'권한이 없습니다'
 				];
 
 				let error = this.props.editStatus.error;
@@ -265,20 +267,21 @@ class Home extends React.Component {
 									3: NO RESOURCE
 					*/
 					let errorMessage = [
-						'Something broke',
-						'You are not logged in',
-						'That memo does not exist'
+						'무언가 잘못되었습니다',
+						'로그인 해주세요',
+						'메모가 존재하지 않습니다'
 					];
 
 
 					// NOTIFY ERROR
 					let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[this.props.starStatus.error - 1] + '</span>');
-					Materialize.toast($toastContent, 2000);
-
+					Materialize.toast($toastContent, 4000);
 
 					// IF NOT LOGGED IN, REFRESH THE PAGE
 					if (this.props.starStatus.error === 2) {
-						setTimeout(() => { location.reload(false); }, 2000);
+						let $toastContent = $('<span style="color: #FFB4BA">' + '잠시 후 로그인 화면으로 이동합니다' + '</span>');					
+						setTimeout(() => { Materialize.toast($toastContent, 5000) }, 1000 );
+						setTimeout(() => { browserHistory.push('/login') }, 3000);
 					}
 				}
 			}

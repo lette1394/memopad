@@ -151,8 +151,8 @@ class Memo extends React.Component {
 			</div>
 		);
 
-		return (
-			<div className="container memo">
+		return ( 
+			<div className="memo">
 				{this.state.editMode ? editView : memoView}
 			</div>
 		);
