@@ -62,7 +62,7 @@ export function memoPostFailure(error) {
 */
 export function memoListRequest(isInitial, listType, id, username) {
     return (dispatch) => {
-        // to be implemented
+        
         dispatch(memoList());
 
         let url = '/api/memo';
@@ -105,7 +105,7 @@ export function memoListFailure() {
         type: MEMO_LIST_FAILURE
     };
 }
-
+ 
 /* MEMO EDIT */
 export function memoEditRequest(id, index, contents) {
     return (dispatch) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Write, MemoList } from 'components';
 import { browserHistory } from 'react-router';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {
 	memoPostRequest,
 	memoListRequest,
@@ -134,7 +135,7 @@ class Home extends React.Component {
 		return this.props.memoListRequest(false, 'old', lastId, this.props.username).then(() => {
 			// IF IT IS LAST PAGE, NOTIFY
 			if (this.props.isLast) {
-				Materialize.toast('마지막 페이지 입니다', 2000);
+				Materialize.toast('마지막 페이지 입니다', 4000);
 			}
 		});
 	}
@@ -300,15 +301,20 @@ class Home extends React.Component {
 		);
 
 		const wallHeader = (
-			<div>
+			<div className='wall-header'>
+				<ReactCSSTransitionGroup
+					transitionName="example"
+					transitionAppear={true}>
 				<div className="container wall-info">
 					<div className="card wall-info blue lighten-2 white-text">
 						<div className="card-content">
-							{this.props.nickname}
+							{this.props.username}
 						</div>
 					</div>
 				</div>
 				{this.state.initallyLoaded && this.props.memoData.length === 0 ? emptyView : undefined}
+			</ReactCSSTransitionGroup>
+				
 			</div>
 		);
 

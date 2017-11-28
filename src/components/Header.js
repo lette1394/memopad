@@ -40,7 +40,7 @@ class Header extends React.Component {
 			<div className='sideNav'>
 				<SideNav
 					trigger={<a data-activates="slide-out" class="button -collapse"><i className="material-icons">menu</i></a>}
-					options={{ closeOnClick: true, menuWidth: '250' }}
+					options={{ closeOnClick: true, menuWidth: '280' }}
 				>
 					<SideNavItem userView
 						user={{

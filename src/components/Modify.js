@@ -46,8 +46,8 @@ class Modify extends React.Component {
 		let confirm = this.state.password_confirm;
 		let nick = this.state.nickname;
 
-		if (!confirm || !pw || !nick) {
-			 Materialize.toast("모든 항목을 입력해주세요", 4000);
+		if (!confirm && !pw && !nick) {
+			 Materialize.toast("적어도 하나의 항목을 입력해주세요", 4000);
 			 return ;
 		}
 
@@ -87,7 +87,6 @@ class Modify extends React.Component {
 							/>
 					</div>
 					<div className="input-field col s12">
-							<label>변경할 Password (선택)</label>
 							<input
 							name="password"
 							type="password"
@@ -95,9 +94,9 @@ class Modify extends React.Component {
 							value={this.state.password}
 							onChange={this.handleChange}
 							/>
+							<label>변경할 Password</label>							
 					</div>
 					<div className="input-field col s12">
-							<label>변경할 Password Confirm</label>
 							<input
 							name="password_confirm"
 							type="password"
@@ -105,9 +104,9 @@ class Modify extends React.Component {
 							value={this.state.password_confirm}
 							onChange={this.handleChange}
 							/>
+							<label>변경할 Password Confirm</label>							
 					</div>
 					<div className="input-field col s12">
-							<label>변경할 Nickname (선택)</label>
 							<input
 							name="nickname"
 							type="text"
@@ -115,6 +114,7 @@ class Modify extends React.Component {
 							value={this.state.nickname}
 							onChange={this.handleChange}
 							/>
+							<label>변경할 Nickname</label>							
 					</div>
 			</div>
 			);

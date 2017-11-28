@@ -118,9 +118,9 @@ class Memo extends React.Component {
 		const memoView = (
 			<div className="card">
 				<div className="info">
-					<Link to={`/wall/${this.props.data.writer}`} className="username">{data.nickname}</Link> wrote a log · <TimeAgo date={data.date.created} />
-					{this.props.data.is_edited ? editedInfo : undefined}
-					{ownership ? dropDownMenu : undefined}
+					<Link to={`/wall/${this.props.data.writer}`} className="username">{data.nickname}</Link>  <TimeAgo date={data.date.created} />
+					{ this.props.data.is_edited ? editedInfo : undefined }
+					{ ownership ? dropDownMenu : undefined }
 				</div>
 				<div className="card-content">
 					<p className='flow-text'>
@@ -129,7 +129,7 @@ class Memo extends React.Component {
 				</div>
 				<div className="footer">
 					<i className="material-icons log-footer-icon star icon-button" style={starStyle} onClick={this.handleStar}>star</i>
-					<span className="star-count">{data.starred.length}</span>
+					<i className="star-count">{data.starred.length}</i>
 				</div>
 			</div>
 		);

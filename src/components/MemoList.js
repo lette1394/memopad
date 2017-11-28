@@ -31,14 +31,14 @@ class MemoList extends React.Component {
         };
 
         return(
-                <ReactCSSTransitionGroup
-                    transitionName="memo"
-                    transitionEnterTimeout={2000}
-                    transitionLeaveTimeout={1000}>
-										<div className="flex-wrapper">
-											{mapToComponents(this.props.data)}
-										</div>
-                </ReactCSSTransitionGroup>
+							<div className="flex-wrapper">
+								<ReactCSSTransitionGroup
+									transitionName="memo"
+									transitionEnterTimeout={2000}
+									transitionLeaveTimeout={1000}>
+										{mapToComponents(this.props.data)}
+								</ReactCSSTransitionGroup>
+							</div>
         );
     }
 }

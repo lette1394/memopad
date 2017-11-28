@@ -1,6 +1,7 @@
 import express from 'express';
 import Account from '../models/account';
 import async from 'async';
+import { isError } from 'util';
 
 const router = express.Router();
 
@@ -172,7 +173,6 @@ router.get('/search', (req, res) => {
 
 
 //MODIFY accounts: PUT /api/account/modify
-
 router.put('/modify/:username', (req, res) => {
 	Account.findOne({ username: req.params.username }, (err, change) => {
 		if (err) return res.status(500).json({ error: 'db fail' })
@@ -182,66 +182,99 @@ router.put('/modify/:username', (req, res) => {
 
 		//CHECK PASS
 		const checkPass = (callback) => {
+			let isError = false;
+		
 			if (req.body.password) {
 				// CHECK PASS LENGTH
 				if (req.body.password.length < 4 || typeof req.body.password !== "string") {
-					callback(null, true);		
+					isError = true;
 					tempStatus = {
 						error: "BAD PASSWORD",
 						code: 2
-					}	
+					}
+					res.status(500);
 				}
 				change.password = change.generateHash(req.body.password);
 				change.save((err) => {
 					if (err) res.status(500).json({ error: "fail to update" })
 				})
-				callback(null, false);
-			}		
+			}
+			callback(isError, true);
 		}
 
 		//CHECK NICKNAME
 		const checkNick = (callback) => {
-			if (req.body.nickname) {
-				// CHECK nickname FORMAT
-				let nicknameRegex = /^[가-힣A-Za-z0-9_]+$/;
-				if (!nicknameRegex.test(req.body.nickname)) {
-					callback(null, true);					
-					tempStatus = {
-						error: "BAD NICKNAME",
-						code: 5
-					};
+
+			const checkReg = (callback) => {
+				let isError = false;
+			
+				if (req.body.nickname) {
+					// CHECK nickname FORMAT
+					let nicknameRegex = /^[가-힣A-Za-z0-9_]+$/;
+					if (!nicknameRegex.test(req.body.nickname)) {
+						isError = true;
+						tempStatus = {
+							error: "BAD NICKNAME",
+							code: 5
+						};
+					}
 				}
+				callback(isError, true);
+			}
 
-				// CHECK NICKNAME EXISTANCE
+			// CHECK NICKNAME EXISTANCE
+			const checkDuplicate = (callback) => {
+				let isError = false;
+			
 				Account.findOne({ nickname: req.body.nickname }, (err, exists) => {
-					let called = false;
-
 					if (err) throw err;
 					if (exists) {
-						callback(null, true);			
-						called = true;						
+						isError = true;
+						console.log("iserror:"+isError);
 						tempStatus = {
 							error: "NICKNAME EXISTS",
 							code: 4
 						}
+					} else {
+						change.nickname = req.body.nickname;
+						change.save((err) => {
+							if (err) res.status(500).json({ error: "fail to update" })
+						})
 					}
+					callback(isError, true);
+				})
+			};
 
-					change.nickname = req.body.nickname;
-					change.save((err) => {
-						if (err) res.status(500).json({ error: "fail to update" })
-					})
-					if (!called) {
-						callback(null, false);
-					}
+			if (req.body.nickname) {
+				let tasks = [checkReg, checkDuplicate];
+				async.series(tasks, (err, result) => {
+					callback(err, true);				
 				});
-			}		
+			} else {
+				callback(false, true);
+			}
+
 		}
 
 		let tasks = [checkNick, checkPass];
-		async.series(tasks, (err, result) => {			
-			return res.json(tempStatus);
-		})
+		async.series(tasks, (err, result) => {
+			if (!err) {
+				console.log('not error')
+				console.log(res.statusCode);
+				console.log(tempStatus);
+				return res.json(tempStatus);
+			}
+			else {
+				console.log('error')				
+				res.status(401);
+				console.log(res.statusCode);
+				console.log(tempStatus);
+				return res.json(tempStatus);
+			}
+			
+		});
 	});
 });
+
 
 export default router;

@@ -123,14 +123,15 @@ class ModifyContainer extends React.Component {
 		const loginBoxes = (
 			<div>
 				<div className="input-field col s12">
-					<label>Password</label>
 					<input
 						name="password"
 						type="password"
 						className="validate"
 						value={this.state.password}
 						onChange={this.handleChange}
-						onKeyPress={this.handleKeyPress} />
+						onKeyPress={this.handleKeyPress} 
+						/>
+					<label>Password</label>
 				</div>
 			</div>
 		);

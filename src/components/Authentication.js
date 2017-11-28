@@ -91,71 +91,72 @@ class Authentication extends React.Component {
     render() {
         const loginBoxes = (
             <div>
-                <div className="input-field col s12 username">
-                    <label>ID</label>
+                <div className="input-field col s12">
                     <input
-                    name="username"
-                    type="text"
-                    className="validate"
-                    value={this.state.username}
-                    onChange={this.handleChange}
+											name="username"
+											type="text"
+											className="validate"
+											value={this.state.username}
+											onChange={this.handleChange}
                     />
+										<label>ID</label>
                 </div>
                 <div className="input-field col s12">
-                    <label>Password</label>
                     <input
-                    name="password"
-                    type="password"
-                    className="validate"
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                    onKeyPress={this.handleKeyPress}/>
+											name="password"
+											type="password"
+											className="validate"
+											value={this.state.password}
+											onChange={this.handleChange}
+											onKeyPress={this.handleKeyPress}
+										/>
+										<label>Password</label>
                 </div>
             </div>
 				);
 				
 				const registerBoxes = (
 					<div>
-							<div className="input-field col s12 username">
-									<label>ID</label>
+							<div className="input-field col s12">
 									<input
-									name="username"
-									type="text"
-									className="validate"
-									value={this.state.username}
-									onChange={this.handleChange}
+										name="username"
+										type="text"
+										className="validate"
+										value={this.state.username}
+										onChange={this.handleChange}
 									/>
+									<label>ID</label>									
 							</div>
 							<div className="input-field col s12">
-									<label>Password</label>
 									<input
-									name="password"
-									type="password"
-									className="validate"
-									value={this.state.password}
-									onChange={this.handleChange}
+										name="password"
+										type="password"
+										className="validate"
+										value={this.state.password}
+										onChange={this.handleChange}
 									/>
+									<label>Password</label>									
 							</div>
 							<div className="input-field col s12">
-									<label>Password Confirm</label>
 									<input
-									name="password_confirm"
-									type="password"
-									className="validate"
-									value={this.state.password_confirm}
-									onChange={this.handleChange}
+										name="password_confirm"
+										type="password"
+										className="validate"
+										value={this.state.password_confirm}
+										onChange={this.handleChange}
 									/>
+									<label>Password Confirm</label>									
 							</div>
 							<div className="input-field col s12 username">
-									<label>Nickname (보여지는 이름)</label>
 									<input
-									name="nickname"
-									type="text"
-									className="validate"
-									value={this.state.nickname}
-									onChange={this.handleChange}
-									onKeyPress={this.handleKeyPress}
+										name="nickname"
+										type="text"
+										className="validate"
+										value={this.state.nickname}
+										onChange={this.handleChange}
+										onKeyPress={this.handleKeyPress}
 									/>
+									<label>Nickname - 보여지는 이름</label>									
 							</div>
 					</div>
 			);

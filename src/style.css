@@ -115,7 +115,7 @@ a {
 
 
 /* Memo */
-.flex-wrapper {
+.flex-wrapper span {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -124,7 +124,7 @@ a {
 }
 
 .memo {
-	margin-bottom: 3rem;
+	margin-bottom: 2rem;
 	margin-left: 1rem;
 	margin-right: 1rem;
 	position:relative;       
@@ -218,19 +218,21 @@ a {
     height: 45px;
 }
 
-.star {
+.memo .footer .star {
     position: relative;
     left: 15px;
     top: 11px;
 }
 
-.star-count {
+.memo .footer .star-count {
     position: relative;
     left: 20px;
     top: 4px;
     font-size: 13px;
     font-weight: bold;
-    color: #777;
+		color: #777;
+		font-style: normal;
+		
 }
 
 
@@ -300,6 +302,11 @@ a {
 
 
 /* WALL HEADER */
+
+.wall-header {
+	margin-bottom: 2rem;
+}
+
 .empty-page {
     font-size: 30px;
     text-align: center;
@@ -459,4 +466,13 @@ ul.search-results {
 	width: 40%;
 	margin: 1rem;
 	background: rgb(230, 50, 50);
+}
+
+
+label {
+	text-align: left;
+}
+
+time {
+	margin-left: 1rem;
 }
