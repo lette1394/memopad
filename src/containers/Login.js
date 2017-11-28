@@ -27,7 +27,7 @@ class Login extends React.Component {
 					browserHistory.push('/');
 					return true;
 				} else {
-					let $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
+					let $toastContent = $('<span style="color: #FFB4BA">ID 혹은 PW가 올바르지 않습니다</span>');
 					Materialize.toast($toastContent, 2000);
 					return false;
 				}

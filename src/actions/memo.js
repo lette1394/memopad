@@ -184,7 +184,7 @@ export function memoStarRequest(id, index) {
 
         return axios.post('/api/memo/star/' + id)
         .then((response) => {
-            dispatch(memoStarSuccess(index, response.data.memo));
+            dispatch(memoStarSuccess(index, response.data));
         }).catch((error) => {
             console.log(error);
             dispatch(memoStarFailure(error.response.data.code));
@@ -198,14 +198,15 @@ export function memoStar() {
     };
 }
 
-export function memoStarSuccess(index, memo) {
+export function memoStarSuccess(index, data) {
     return {
         type: MEMO_STAR_SUCCESS,
         index,
-        memo
+				memo: data.memo,
+				has_starred: data.has_starred
     };
 }
-
+ 
 export function memoStarFailure(error) {
     return {
         type: MEMO_STAR_FAILURE,

@@ -1,6 +1,7 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
 import { Link } from 'react-router';
+import Comment from 'components';
 
 class Memo extends React.Component {
 
@@ -94,6 +95,17 @@ class Memo extends React.Component {
 	render() {
 		var { data, ownership } = this.props;
 
+		const mapToComponents = data => {
+			return data.map((comment, i) => {
+				return (
+					<Comment
+						comment={comment}
+					/>
+
+				);
+			});
+		};
+
 		const dropDownMenu = (
 			<div className="option-button">
 				<a className='dropdown-button'
@@ -118,7 +130,7 @@ class Memo extends React.Component {
 		const memoView = (
 			<div className="card">
 				<div className="info">
-					<Link to={`/wall/${this.props.data.writer}`} className="username">{data.nickname}</Link>  <TimeAgo date={data.date.created} />
+					<Link to={`/wall/${this.props.data.postedBy.username}/${this.props.data.postedBy.nickname}`} className="username">{this.props.data.postedBy.nickname}</Link>  <TimeAgo date={data.date.created} />
 					{ this.props.data.is_edited ? editedInfo : undefined }
 					{ ownership ? dropDownMenu : undefined }
 				</div>
@@ -130,6 +142,9 @@ class Memo extends React.Component {
 				<div className="footer">
 					<i className="material-icons log-footer-icon star icon-button" style={starStyle} onClick={this.handleStar}>star</i>
 					<i className="star-count">{data.starred.length}</i>
+				</div>
+				<div>
+					{mapToComponents(this.props.data.comments)}
 				</div>
 			</div>
 		);
@@ -177,7 +192,8 @@ Memo.defaultProps = {
 		contents: 'Contents',
 		is_edited: false,
 		date: { edited: new Date(), created: new Date() },
-		starred: []
+		starred: [],
+		comments: []
 	},
 	ownership: true,
 	onEdit: (id, index, contents) => {

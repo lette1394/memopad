@@ -318,6 +318,10 @@ a {
     text-align: center;
 }
 
+.wall-info .card-content {
+	font-size: 2rem;
+}
+
 
 
 /* SEARCH */

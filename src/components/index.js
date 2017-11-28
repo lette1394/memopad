@@ -6,5 +6,6 @@ import MemoList from './MemoList';
 import Search from './Search';
 import RichTextEditor from './RichTextEditor';
 import Modify from './Modify';
+import Comment from './Comment';
 
-export { Header, Authentication, Write, Memo, MemoList, Search, RichTextEditor, Modify };
+export { Header, Authentication, Write, Memo, MemoList, Search, RichTextEditor, Modify, Comment };

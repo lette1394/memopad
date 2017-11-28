@@ -110,10 +110,9 @@ class Home extends React.Component {
 		}
 
 		// IF PAGE IS EMPTY, DO THE INITIAL LOADING
-		if (this.props.memoData.length === 0)
-			return this.props.memoListRequest(true);
-
-
+		if (this.props.memoData.length === 0) {
+			return this.props.memoListRequest(true);			
+		}
 
 		return this.props.memoListRequest(false, 'new', this.props.memoData[0]._id, this.props.username);
 	}
@@ -148,7 +147,7 @@ class Home extends React.Component {
 					// TO BE IMPLEMENTED
 					this.loadNewMemo().then(
 						() => {
-							Materialize.toast("Success!", 2000);
+							Materialize.toast("저장되었습니다", 2000);
 						}
 					);
 				} else {
@@ -183,7 +182,7 @@ class Home extends React.Component {
 	handleEdit(id, index, contents) {
 		return this.props.memoEditRequest(id, index, contents).then(() => {
 			if (this.props.editStatus.status === 'SUCCESS') {
-				Materialize.toast('Success!', 2000);
+				Materialize.toast('수정 완료!', 2000);
 			} else {
 				/*
 							 ERROR CODES
@@ -221,6 +220,7 @@ class Home extends React.Component {
 		this.props.memoRemoveRequest(id, index).then(
 			() => {
 				if (this.props.removeStatus.status === "SUCCESS") {
+					Materialize.toast('삭제되었습니다', 2000);				
 					setTimeout(() => {
 						if ($("body").height() < $(window).height()) {
 							this.loadOldMemo();
@@ -237,9 +237,9 @@ class Home extends React.Component {
 					*/
 					let errorMessage = [
 						'Something broke',
-						'You are not logged in',
-						'That memo does not exist',
-						'You do not have permission'
+						'로그인 해주세요',
+						'메모가 존재하지 않습니다',
+						'권한이 없습니다'
 					];
 
 					// NOTIFY ERROR
@@ -280,8 +280,8 @@ class Home extends React.Component {
 
 					// IF NOT LOGGED IN, REFRESH THE PAGE
 					if (this.props.starStatus.error === 2) {
-						let $toastContent = $('<span style="color: #FFB4BA">' + '잠시 후 로그인 화면으로 이동합니다' + '</span>');					
-						setTimeout(() => { Materialize.toast($toastContent, 5000) }, 1000 );
+						let $toastContent = $('<span style="color: #FFB4BA">' + '잠시 후 로그인 화면으로 이동합니다' + '</span>');
+						setTimeout(() => { Materialize.toast($toastContent, 5000) }, 1000);
 						setTimeout(() => { browserHistory.push('/login') }, 3000);
 					}
 				}
@@ -295,7 +295,7 @@ class Home extends React.Component {
 		const emptyView = (
 			<div className="container">
 				<div className="empty-page">
-					<b>{this.props.nickname}</b> isn't registered or hasn't written any memo
+					<b>{this.props.nickname}</b> 메모를 작성하지 않았습니다
                 </div>
 			</div>
 		);
@@ -305,16 +305,16 @@ class Home extends React.Component {
 				<ReactCSSTransitionGroup
 					transitionName="example"
 					transitionAppear={true}>
-				<div className="container wall-info">
-					<div className="card wall-info blue lighten-2 white-text">
-						<div className="card-content">
-							{this.props.username}
+					<div className="container wall-info">
+						<div className="card wall-info blue lighten-2 white-text">
+							<div className="card-content">
+							{this.props.nickname} ({this.props.username})
+							</div>
 						</div>
 					</div>
-				</div>
-				{this.state.initallyLoaded && this.props.memoData.length === 0 ? emptyView : undefined}
-			</ReactCSSTransitionGroup>
-				
+					{this.state.initallyLoaded && this.props.memoData.length === 0 ? emptyView : undefined}
+				</ReactCSSTransitionGroup>
+
 			</div>
 		);
 
@@ -322,8 +322,8 @@ class Home extends React.Component {
 			<div className="wrapper">
 				{typeof this.props.username !== 'undefined' ? wallHeader : undefined}
 				{/* {this.props.isLoggedIn ? <Write onPost={this.handlePost} /> : undefined} */}
-				<MemoList 
-					data={this.props.memoData} 
+				<MemoList
+					data={this.props.memoData}
 					currentUser={this.props.currentUser}
 					currentNickname={this.props.currentNickname}
 					onEdit={this.handleEdit}
@@ -333,7 +333,7 @@ class Home extends React.Component {
 		);
 	}
 }
- 
+
 Home.PropTypes = {
 	username: React.PropTypes.string,
 	nickname: React.PropTypes.string

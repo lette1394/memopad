@@ -48,7 +48,7 @@ class Search extends React.Component {
 		// IF PRESSED ENTER, TRIGGER TO NAVIGATE TO THE FIRST USER SHOWN
 		if (e.keyCode === 13) {
 			if (this.props.searchAccounts.length > 0) {
-				browserHistory.push('/wall/' + this.props.searchAccounts[0].username);
+				browserHistory.push('/wall/' + this.props.searchAccounts[0].username + '/' + this.props.searchAccounts[0].nickname);
 				this.handleClose();
 			}
 		}
@@ -75,7 +75,7 @@ class Search extends React.Component {
 		const mapDataToLinks = (data) => {
 			return data.map((account, i) => {
 				return (
-					<Link onClick={this.handleClose} to={`/wall/${account.username}`} key={i}>
+					<Link onClick={this.handleClose} to={`/wall/${account.username}/${account.nickname}`} key={i}>
 						{account.nickname}
 					</Link>
 				);

@@ -22,7 +22,7 @@ ReactDOM.render(
                 <Route path="modify" component={ModifyContainer}/>
                 <Route path="login" component={Login}/>
                 <Route path="register" component={Register}/>
-                <Route path="wall/:username" component={Wall}/>
+                <Route path="wall/:username/:nickname" component={Wall}/>
             </Route>
         </Router>
     </Provider>, rootElement
