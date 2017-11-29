@@ -235,6 +235,36 @@ a {
 		
 }
 
+.memo .comments {
+	background: white;
+}
+
+.memo .input-comment {
+	margin-left: 2rem;
+	margin-right: 2rem;
+}
+
+.input-field.comment {
+	display: inline-block;
+	width: 85%;
+	margin-right: 1rem;
+}
+
+.input-field.enter {
+	text-align: right;
+	margin-right: 5%;
+	margin-top: 2rem;
+	width: 3%;
+	display: inline-block;
+}
+
+.input-comment .material-icons {
+	color: black;
+	box-shadow: none;
+	font-size: 2.5rem;
+	vertical-align: bottom;
+}
+
 
 /* ANIMATION */
 @-webkit-keyframes memo-enter {

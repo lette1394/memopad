@@ -23,6 +23,8 @@ class Home extends React.Component {
 		this.handleStar = this.handleStar.bind(this);
 		this.loadNewMemo = this.loadNewMemo.bind(this);
 		this.loadOldMemo = this.loadOldMemo.bind(this);
+		this.handleComment = this.handleComment.bind(this);
+
 		this.state = {
 			loadingState: false,
 			initiallyLoaded: false
@@ -210,10 +212,12 @@ class Home extends React.Component {
 				if (error === 3) {
 					setTimeout(() => { location.reload(false); }, 2000);
 				}
-
-
 			}
 		});
+	}
+
+	handleComment(id, index, comment) {
+		
 	}
 
 	handleRemove(id, index) {
@@ -324,9 +328,11 @@ class Home extends React.Component {
 				{/* {this.props.isLoggedIn ? <Write onPost={this.handlePost} /> : undefined} */}
 				<MemoList
 					data={this.props.memoData}
+					isLoggedIn={this.props.isLoggedIn}
 					currentUser={this.props.currentUser}
 					currentNickname={this.props.currentNickname}
 					onEdit={this.handleEdit}
+					onComment={this.handleComment}
 					onRemove={this.handleRemove}
 					onStar={this.handleStar} />
 			</div>

@@ -16,8 +16,10 @@ class MemoList extends React.Component {
 					<Memo
 						data={memo}
 						ownership={memo.writer === this.props.currentUser}
+						isLoggedIn={this.props.isLoggedIn}
 						key={memo._id}
 						onEdit={this.props.onEdit}
+						onComment={this.props.onComment}
 						onRemove={this.props.onRemove}
 						onStar={this.props.onStar}
 						index={i}
@@ -48,7 +50,8 @@ MemoList.propTypes = {
 	currentNickname: React.PropTypes.string,
 	onEdit: React.PropTypes.func,
 	onRemove: React.PropTypes.func,
-	onStar: React.PropTypes.func
+	onStar: React.PropTypes.func,
+	onComment: React.PropTypes.func
 };
 
 MemoList.defaultProps = {
@@ -63,6 +66,9 @@ MemoList.defaultProps = {
 	},
 	onStar: (id, index) => {
 		console.error('onStar not defined');
+	},
+	onComment: (id, index, comment) => {
+		console.error('onComment not defined');		
 	}
 };
 

@@ -9,12 +9,18 @@ class Memo extends React.Component {
 		super(props);
 		this.state = {
 			editMode: false,
-			value: props.data.contents
+			commentMode: false,
+			value: props.data.contents,
+			commentValue: ""
 		};
 		this.toggleEdit = this.toggleEdit.bind(this);
+		this.toggleComment = this.toggleComment.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.handleChangeComment = this.handleChangeComment.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
 		this.handleStar = this.handleStar.bind(this);
+		this.handleKeyPress = this.handleKeyPress.bind(this);
+		this.handleComment = this.handleComment.bind(this);
 	}
 
 	componentDidMount() {
@@ -69,12 +75,56 @@ class Memo extends React.Component {
 				editMode: !this.state.editMode
 			});
 		}
+	}
 
+	toggleComment() {
+		if (this.state.commentMode && this.state.commentValue) {
+			this.handleComment().then((success) => {
+				if (success) {
+					Materialize.toast("댓글을 달았습니다", 4000);						
+					this.setState({
+						commentMode: !this.state.commentMode
+					});
+				} 
+				else {
+					Materialize.toast("댓글은 200자를 넘을 수 없습니다.", 4000);				
+				}
+			})
+		} else {
+			this.setState({
+				commentMode: !this.state.commentMode
+			});
+		}
+	}
+
+	handleComment() {
+		let id = this.props.data._id;
+		let index = this.props.index;
+		let comment = this.state.commentValue;
+		
+		if (comment.length < 200) {
+			this.props.onComment(id, index, comment);
+
+			this.setState({
+				commentValue: ''
+			})
+
+			return new Promise((resolve, reject) => { resolve(true)} );
+		} 
+		else {
+			return new Promise((resolve, reject) => { resolve(false)} );
+		}
 	}
 
 	handleChange(e) {
 		this.setState({
 			value: e.target.value
+		});
+	}
+
+	handleChangeComment(e) {
+		this.setState({
+			commentValue: e.target.value
 		});
 	}
 
@@ -92,6 +142,12 @@ class Memo extends React.Component {
 		this.props.onStar(id, index);
 	}
 
+	handleKeyPress(e) {
+		if (e.charCode === 13) {
+			this.toggleComment();
+		} 
+	}
+
 	render() {
 		var { data, ownership } = this.props;
 
@@ -101,7 +157,6 @@ class Memo extends React.Component {
 					<Comment
 						comment={comment}
 					/>
-
 				);
 			});
 		};
@@ -122,10 +177,39 @@ class Memo extends React.Component {
 
 		// EDITED info
 		const editedInfo = (
-			<span style={{ color: '#AAB5BC' }}> · Edited <TimeAgo date={this.props.data.date.edited} live={true} /></span>
+			<span style={{ color: '#AAB5BC' }}> · edited <TimeAgo date={this.props.data.date.edited} live={true} /></span>
 		);
 
+		const input_comment = (
+			<div className="input-comment">
+				<div className="row s12">
+					<div className="input-field comment">
+						<input 
+							onChange={this.handleChangeComment} 
+							value={this.state.commentValue}
+							onKeyPress={this.handleKeyPress}
+							name="comment" 
+							type="text" 
+							className='validate' 
+							/>
+						<label>Comment</label>
+					</div>
+					<div className="input-field enter">
+						<a className="waves-effect waves" type="submit" name="action">
+							<i onClick={this.toggleComment} className="material-icons">keyboard_return</i>
+						</a>
+					</div>
+				</div>
+			</div>
+	);
+
 		const starStyle = (this.props.data.starred.indexOf(this.props.currentUser) > -1) ? { color: '#ff9980' } : {};
+
+		const commentButton = (
+			<div className="card-action">
+				<a onClick={this.toggleComment}>comments</a>
+			</div>
+		)
 
 		const memoView = (
 			<div className="card">
@@ -143,9 +227,13 @@ class Memo extends React.Component {
 					<i className="material-icons log-footer-icon star icon-button" style={starStyle} onClick={this.handleStar}>star</i>
 					<i className="star-count">{data.starred.length}</i>
 				</div>
-				<div>
+				<div className='comments'>
 					{mapToComponents(this.props.data.comments)}
 				</div>
+								
+				{this.state.commentMode ? input_comment : undefined}
+				{this.props.isLoggedIn ? commentButton : undefined}
+				
 			</div>
 		);
 
@@ -179,6 +267,7 @@ Memo.propTypes = {
 	ownership: React.PropTypes.bool,
 	onEdit: React.PropTypes.func,
 	onRemove: React.PropTypes.func,
+	onComment: React.PropTypes.func,
 	onStar: React.PropTypes.func,
 	currentUser: React.PropTypes.string,
 	currentNickname: React.PropTypes.string
@@ -204,6 +293,9 @@ Memo.defaultProps = {
 	},
 	onStar: (id, index) => {
 		console.error('onStar not defined');
+	},
+	onComment: (id, index, comment) => {
+		console.error('onComment not defined');
 	},
 	currentUser: '',
 	currentNickname: ''

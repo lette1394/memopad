@@ -8,8 +8,6 @@ class Header extends React.Component {
 
 	constructor(props) {
 		super(props);
-
-		// IMPLEMENT: CREATE A SEARCH STATUS
 		this.state = {
 			search: false
 		};
