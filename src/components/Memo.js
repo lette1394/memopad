@@ -214,6 +214,12 @@ class Memo extends React.Component {
 			</div>
 		)
 
+		const dumb = (
+			<div className="card-action">
+				
+			</div>
+		)
+
 		const memoView = (
 			<div className="card hoverable">
 				<div className="info">
@@ -234,7 +240,7 @@ class Memo extends React.Component {
 				<div>
 					{mapToComponents(this.props.data.comments)}				
 					{this.state.commentMode ? input_comment : undefined}
-					{this.props.isLoggedIn ? commentButton : undefined}
+					{this.props.isLoggedIn ? commentButton : dumb}
 				</div>
 				
 			</div>
