@@ -22,6 +22,10 @@ const initialState = {
 	star: {
 		status: 'INIT',
 		error: -1
+	},
+	comment: {
+		status: 'INIT',
+		error: -1
 	}
 };
 
@@ -148,7 +152,7 @@ export default function memo(state, action) {
 					status: { $set: 'WAITING' },
 					error: { $set: -1 }
 				}
-			});
+			}); 
 		case types.MEMO_STAR_SUCCESS:
 			return update(state, {
 				star: {
@@ -167,6 +171,37 @@ export default function memo(state, action) {
 					error: { $set: action.error }
 				}
 			});
+
+
+			/* COMMENT */
+
+		case types.MEMO_COMMENT:
+			return update(state, {
+				comment: {
+					status: { $set: 'WAITING' },
+					error: { $set: -1 }
+				}
+			});
+		case types.MEMO_COMMENT_SUCCESS:
+			return update(state, {
+				comment: {
+					status: { $set: 'SUCCESS' }
+				},
+				list: {
+					data: {
+						[action.index]: { $set: action.memo }
+					}
+				}
+			});
+		case types.MEMO_COMMENT_FAILURE:
+			return update(state, {
+				comment: {
+					status: { $set: 'FAILURE' },
+					error: { $set: action.error }
+				}
+			});
+
+
 		default:
 			return state;
 	}

@@ -13,7 +13,7 @@ const Memo = new Schema({
 	starred: [String],
 	date: {
 		created: { type: Date, default: Date.now },
-		edited: { type: Date, default: Date.now }
+		edited: { type: Date, default: Date.now } 
 	},
 	is_edited: { type: Boolean, default: false },
 	comments: [{

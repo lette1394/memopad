@@ -175,6 +175,10 @@ a {
     color: #90A4AE;
 }
 
+.memo .footer {
+	margin-bottom: 1rem;
+}
+
 .memo .info .username {
     color: #263238;
     font-weight: bold;
@@ -244,6 +248,38 @@ a {
 	margin-right: 2rem;
 }
 
+.memo .card-action {
+	text-align: right;
+}
+
+.memo .card-action a {
+	color: black;
+}
+
+.comments {
+	display: flex;
+	margin-left: 1.5rem;
+	margin-right: 1.5rem;
+	margin-bottom: 1rem;
+}
+
+.comments .nickname {
+	font-weight: bold;
+	display: inline;
+	margin-right: 1rem;
+}
+
+.comments .text {
+	display: inline;
+	margin-right: 2rem;
+}
+
+.comments .right {
+	position: absolute;
+	right: 1rem;
+}
+
+
 .input-field.comment {
 	display: inline-block;
 	width: 85%;
@@ -264,6 +300,7 @@ a {
 	font-size: 2.5rem;
 	vertical-align: bottom;
 }
+
 
 
 /* ANIMATION */
@@ -330,6 +367,70 @@ a {
     animation-name: memo-leave;
 }
 
+
+/* ANIMATION */
+@-webkit-keyframes comment-enter {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes comment-enter {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+.comment .inputComment-enter {
+	-webkit-animation-duration: 2s;
+	animation-duration: 2s;
+	-webkit-animation-name: comment-enter;
+	animation-name: comment-enter;
+}
+
+/* ANIMATION */
+@-webkit-keyframes comment-leave {
+	0% {
+		opacity: 1;
+		max-height: 1080px;
+	}
+	50% {
+		opacity: 0;
+		 -webkit-transform: translateX(100px);
+	}
+	100% {
+			max-height: 0px;
+	}
+}
+
+@keyframes comment-leave {
+	0% {
+		opacity: 1;
+		max-height: 1080px;
+	}
+	50% {
+		opacity: 0;
+		transform: translateX(100px);
+	}
+	100% {
+			max-height: 0px;
+	}
+}
+
+.comment-leave {
+	max-height: 0px;
+	opacity: 0;
+	-webkit-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-name: comment-leave;
+	animation-name: comment-leave;
+}
 
 /* WALL HEADER */
 
@@ -489,6 +590,23 @@ ul.search-results {
 }
 
 
+/* COMMENT ANIMATION */
+.comment-enter {
+	transform: scale(.1);
+}
+.comment-enter.comment-enter-active {
+	transform: scale(1);
+	transition: all .5s ease-in-out;
+}
+.comment-leave {
+	transform: scale(1);
+}
+.comment-leave.comment-leave-active {
+	transform: scale(0);
+	transition: all .5s ease-in-out;
+}
+
+
 /* Modify */
 
 .btn.modify {
@@ -510,3 +628,5 @@ label {
 time {
 	margin-left: 1rem;
 }
+
+

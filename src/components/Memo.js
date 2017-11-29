@@ -1,7 +1,7 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
 import { Link } from 'react-router';
-import Comment from 'components';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Memo extends React.Component {
 
@@ -150,13 +150,16 @@ class Memo extends React.Component {
 
 	render() {
 		var { data, ownership } = this.props;
-
+		console.log('data'+ data)
 		const mapToComponents = data => {
+			
 			return data.map((comment, i) => {
 				return (
-					<Comment
-						comment={comment}
-					/>
+					<div className='comments'>
+							<span className='nickname'>{comment.postedBy.nickname}</span>
+							<span className='text'>{comment.text}</span>
+							<span className='right'><i className='right-align material-icons'>clear</i></span>
+					</div>
 				);
 			});
 		};
@@ -207,12 +210,12 @@ class Memo extends React.Component {
 
 		const commentButton = (
 			<div className="card-action">
-				<a onClick={this.toggleComment}>comments</a>
+				<a onClick={this.toggleComment}>{ !this.state.commentMode ? `reply` : `cancle` }</a>
 			</div>
 		)
 
 		const memoView = (
-			<div className="card">
+			<div className="card hoverable">
 				<div className="info">
 					<Link to={`/wall/${this.props.data.postedBy.username}/${this.props.data.postedBy.nickname}`} className="username">{this.props.data.postedBy.nickname}</Link>  <TimeAgo date={data.date.created} />
 					{ this.props.data.is_edited ? editedInfo : undefined }
@@ -227,12 +230,12 @@ class Memo extends React.Component {
 					<i className="material-icons log-footer-icon star icon-button" style={starStyle} onClick={this.handleStar}>star</i>
 					<i className="star-count">{data.starred.length}</i>
 				</div>
-				<div className='comments'>
-					{mapToComponents(this.props.data.comments)}
+				
+				<div>
+					{mapToComponents(this.props.data.comments)}				
+					{this.state.commentMode ? input_comment : undefined}
+					{this.props.isLoggedIn ? commentButton : undefined}
 				</div>
-								
-				{this.state.commentMode ? input_comment : undefined}
-				{this.props.isLoggedIn ? commentButton : undefined}
 				
 			</div>
 		);

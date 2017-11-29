@@ -13,7 +13,11 @@ import {
     MEMO_REMOVE_FAILURE,
     MEMO_STAR,
     MEMO_STAR_SUCCESS,
-    MEMO_STAR_FAILURE
+		MEMO_STAR_FAILURE,
+		MEMO_COMMENT,
+		MEMO_COMMENT_SUCCESS,
+		MEMO_COMMENT_FAILURE
+		
 } from './ActionTypes';
 import axios from 'axios';
 
@@ -186,7 +190,6 @@ export function memoStarRequest(id, index) {
         .then((response) => {
             dispatch(memoStarSuccess(index, response.data));
         }).catch((error) => {
-            console.log(error);
             dispatch(memoStarFailure(error.response.data.code));
         });
     };
@@ -212,4 +215,35 @@ export function memoStarFailure(error) {
         type: MEMO_STAR_FAILURE,
         error
     };
+}
+
+/* MEMO COMMENT */
+
+export function memoCommentRequest(id, index, comment) {
+	return (dispatch) => {
+			dispatch(memoStar());
+
+			return axios.post('/api/memo/comment/' + id, { comment })
+			.then((response) => {
+					dispatch(memoCommentSuccess(index, response.data));
+			}).catch((error) => {
+					dispatch(memoCommentFailure(error.response.data.code));
+			});
+	};
+}
+
+export function memoCommentSuccess(index, data) {
+	return {
+		type: MEMO_COMMENT_SUCCESS,
+		index,
+		memo: data.memo
+	}
+}
+
+
+export function memoCommentFailure(error) {
+	return {
+		type: MEMO_COMMENT_FAILURE,
+		error
+	}
 }

@@ -390,4 +390,58 @@ router.get('/:username/:listType/:id', (req, res) => {
 	}
 });
 
+router.post('/comment/:id', (req, res) => {
+	if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+		return res.status(400).json({
+			error: "INVALID ID",
+			code: 1
+		});
+	}
+
+	// CHECK LOGIN STATUS
+	if (typeof req.session.loginInfo === 'undefined') {
+		return res.status(403).json({
+			error: "NOT LOGGED IN",
+			code: 2
+		});
+	}
+
+	Memo.findById(req.params.id, (err, memo) => {
+		if (err) throw err;
+
+		// MEMO DOES NOT EXIST
+		if (!memo) {
+			return res.status(404).json({
+				error: "NO RESOURCE",
+				code: 3
+			});
+		}
+	
+		let newComment = {
+			postedBy: req.session.loginInfo._id,
+			text: req.body.comment,
+			starred: []
+		};
+
+		memo.comments.push(newComment);
+
+		// SAVE THE MEMO
+		memo.save((err, memo) => {
+			if (err) throw err;
+
+			Memo.findOne({_id: memo._id})
+			.populate('postedBy', 'username nickname created')
+			.populate('comments.postedBy', 'username nickname created')			
+			.exec((err, memo) => {
+				if(err) throw err;
+				res.json({
+					success: true,
+					memo
+				});
+			});
+		});
+	});
+
+}) 
+
 export default router;

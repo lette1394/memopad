@@ -41,16 +41,12 @@ class App extends React.Component {
 			if (parts.length == 2) return parts.pop().split(";").shift();
 		}
 
-		// get login data from cookie
 		let loginData = getCookie('key');
 
-		// if loginData is undefined, do nothing
 		if (typeof loginData === "undefined") return;
 
-		// decode base64 & parse json
 		loginData = JSON.parse(atob(loginData));
 
-		// if not logged in, do nothing
 		if (!loginData.isLoggedIn) return;
 
 		// page refreshed & has a session in cookie,

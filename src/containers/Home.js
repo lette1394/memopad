@@ -8,7 +8,8 @@ import {
 	memoListRequest,
 	memoEditRequest,
 	memoRemoveRequest,
-	memoStarRequest
+	memoStarRequest,
+	memoCommentRequest
 } from 'actions/memo';
 
 
@@ -217,7 +218,31 @@ class Home extends React.Component {
 	}
 
 	handleComment(id, index, comment) {
-		
+		this.props.memoCommentRequest(id, index, comment).then(() => {
+			if (this.props.commentStatus.status === "SUCCESS") {
+				//toast!
+
+			} else {
+				/*
+				DELETE MEMO: DELETE /api/memo/:id
+				ERROR CODES
+						1: INVALID ID
+						2: NOT LOGGED IN
+						3: NO RESOURCE
+						4: PERMISSION FAILURE
+				*/
+				let errorMessage = [
+					'Something broke',
+					'로그인 해주세요',
+					'메모가 존재하지 않습니다',
+					'권한이 없습니다'
+				];
+
+				// NOTIFY ERROR
+				let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[this.props.commentStatus.error - 1] + '</span>');
+				Materialize.toast($toastContent, 2000);
+			}
+		})
 	}
 
 	handleRemove(id, index) {
@@ -338,7 +363,7 @@ class Home extends React.Component {
 			</div>
 		);
 	}
-}
+} 
 
 Home.PropTypes = {
 	username: React.PropTypes.string,
@@ -361,7 +386,8 @@ const mapStateToProps = (state) => {
 		isLast: state.memo.list.isLast,
 		editStatus: state.memo.edit,
 		removeStatus: state.memo.remove,
-		starStatus: state.memo.star
+		starStatus: state.memo.star,
+		commentStatus: state.memo.comment
 	};
 };
 
@@ -381,6 +407,9 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		memoStarRequest: (id, index) => {
 			return dispatch(memoStarRequest(id, index));
+		},
+		memoCommentRequest: (id, index, comment) => {
+			return dispatch(memoCommentRequest(id, index, comment));
 		}
 	};
 };
