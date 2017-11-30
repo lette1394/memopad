@@ -263,13 +263,16 @@ a {
 	margin-bottom: 1rem;
 }
 
-.comments .nickname {
+.comments .nickname {	
+	flex-shrink: 1;
 	font-weight: bold;
 	display: inline;
 	margin-right: 1rem;
 }
 
 .comments .text {
+	flex: 7;
+	flex-grow: 9;
 	display: inline;
 	margin-right: 2rem;
 }

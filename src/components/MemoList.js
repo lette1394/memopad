@@ -20,6 +20,7 @@ class MemoList extends React.Component {
 						key={memo._id}
 						onEdit={this.props.onEdit}
 						onComment={this.props.onComment}
+						onCommentRemove={this.props.onCommentRemove}
 						onRemove={this.props.onRemove}
 						onStar={this.props.onStar}
 						index={i}
@@ -69,6 +70,9 @@ MemoList.defaultProps = {
 	},
 	onComment: (id, index, comment) => {
 		console.error('onComment not defined');		
+	}, 
+	onCommentRemove: (id, index, i, idx) => {
+		console.error('onCommentRemove not defined');		
 	}
 };
 

@@ -16,7 +16,10 @@ import {
 		MEMO_STAR_FAILURE,
 		MEMO_COMMENT,
 		MEMO_COMMENT_SUCCESS,
-		MEMO_COMMENT_FAILURE
+		MEMO_COMMENT_FAILURE,
+		MEMO_COMMENTREMOVE,
+		MEMO_COMMENTREMOVE_SUCCESS,
+		MEMO_COMMENTREMOVE_FAILURE
 		
 } from './ActionTypes';
 import axios from 'axios';
@@ -232,6 +235,8 @@ export function memoCommentRequest(id, index, comment) {
 	};
 }
 
+
+
 export function memoCommentSuccess(index, data) {
 	return {
 		type: MEMO_COMMENT_SUCCESS,
@@ -244,6 +249,49 @@ export function memoCommentSuccess(index, data) {
 export function memoCommentFailure(error) {
 	return {
 		type: MEMO_COMMENT_FAILURE,
+		error
+	}
+}
+
+export function memoComment() {
+	return {
+			type: MEMO_COMMENT
+	};
+}
+
+export function memoCommentRemoveRequest(id, index, memoId, memoIndex) {
+	return (dispatch) => {
+			dispatch(memoCommentRemove());
+
+			return axios.post('/api/memo/comment/remove/' + memoId, { id, index, memoIndex } )
+			.then((response) => {
+					dispatch(memoCommentRemoveSuccess(memoIndex, response.data, index));
+			}).catch((error) => {
+					dispatch(memoCommentRemoveFailure(error.response.data.code));
+			});
+	};
+}
+
+
+export function memoCommentRemove() {
+	return {
+			type: MEMO_COMMENTREMOVE
+	};
+}
+
+export function memoCommentRemoveSuccess(index, data, commentIdx) {
+	return {
+		type: MEMO_COMMENTREMOVE_SUCCESS,
+		index,
+		comment: data.comment,
+		commentIdx
+	}
+}
+
+
+export function memoCommentRemoveFailure(error) {
+	return {
+		type: MEMO_COMMENTREMOVE_FAILURE,
 		error
 	}
 }

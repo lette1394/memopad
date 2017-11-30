@@ -19,7 +19,8 @@ module.exports = {
                 test: /\.js$/,
                 loaders: ['babel?' + JSON.stringify({
                     cacheDirectory: true,
-                    presets: ['es2015', 'react']
+										presets: ['es2015', 'react', 'stage-0'],
+										plugins: ["emotion"]								
                 })],
                 exclude: /node_modules/
             },

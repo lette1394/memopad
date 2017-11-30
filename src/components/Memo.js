@@ -11,8 +11,10 @@ class Memo extends React.Component {
 			editMode: false,
 			commentMode: false,
 			value: props.data.contents,
-			commentValue: ""
+			commentValue: "",
+			commentDeleteMode: false
 		};
+		
 		this.toggleEdit = this.toggleEdit.bind(this);
 		this.toggleComment = this.toggleComment.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -23,6 +25,7 @@ class Memo extends React.Component {
 		this.handleComment = this.handleComment.bind(this);
 		this.handleCommentRemove = this.handleCommentRemove.bind(this);
 		this.handleCommentRemoveModal = this.handleCommentRemoveModal.bind(this);
+		this.handleCommentRemoveModalAgree = this.handleCommentRemoveModalAgree.bind(this);
 	}
 
 	componentDidMount() {
@@ -132,12 +135,22 @@ class Memo extends React.Component {
 		});
 	}
 
-	handleCommentRemoveModal() {
-		$('#modal1').modal('open');
+	handleCommentRemoveModal(id, i) {		
+		//$('#modal1').modal('open');
+		this.handleCommentRemove(id, i);
 	}
 
-	handleCommentRemove() {
-		alert();
+	handleCommentRemoveModalAgree() {
+		this.setState({
+			commentDeleteMode : true
+		});
+	}
+
+	handleCommentRemove(id, i) {
+		let memoId = this.props.data._id;
+		let memoIndex = this.props.index;
+
+		this.props.onCommentRemove(id, i, memoId, memoIndex);		
 	}
 
 	handleRemove() {
@@ -162,7 +175,6 @@ class Memo extends React.Component {
 
 	render() {
 		var { data, ownership } = this.props;
-		console.log('data'+ data)
 		const mapToComponents = data => {
 			
 			return data.map((comment, i) => {
@@ -170,7 +182,11 @@ class Memo extends React.Component {
 					<div className='comments'>
 							<span className='nickname'>{comment.postedBy.nickname}</span>
 							<span className='text'>{comment.text}</span>
-							{ comment.postedBy.username == this.props.currentUser ? <span className='right'><i onClick={this.handleCommentRemoveModal} className='right-align material-icons'>clear</i></span> : undefined }
+							{ comment.postedBy.username == this.props.currentUser ? <span className='right'>
+							<i onClick={() => this.handleCommentRemoveModal(comment._id, i)}
+								data-commentId={comment._id}
+								data-commentIndex={i}
+								className='right-align material-icons'>clear</i></span> : undefined }
 							{ comment.postedBy.username == this.props.currentUser ? commentRemoveModal : undefined }
 					</div>
 				);
@@ -199,7 +215,7 @@ class Memo extends React.Component {
 				</div>
 				<div className="modal-footer">
 					<a className="modal-action modal-close waves-effect waves-red btn-flat">Cancle</a>
-					<a onClick={this.handleCommentRemove} className="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+					<a onClick={this.handleCommentRemoveModalAgree} className="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
 				</div>
 			</div>		
 		)
@@ -330,6 +346,9 @@ Memo.defaultProps = {
 	},
 	onComment: (id, index, comment) => {
 		console.error('onComment not defined');
+	},
+	onCommentRemove : (id, index, i, idx) => {
+		console.error('onCommentRemove not defined');		
 	},
 	currentUser: '',
 	currentNickname: ''

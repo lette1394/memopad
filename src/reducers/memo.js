@@ -26,6 +26,10 @@ const initialState = {
 	comment: {
 		status: 'INIT',
 		error: -1
+	},
+	commentRemove: {
+		status: 'INIT',
+		error: -1
 	}
 };
 
@@ -196,6 +200,34 @@ export default function memo(state, action) {
 		case types.MEMO_COMMENT_FAILURE:
 			return update(state, {
 				comment: {
+					status: { $set: 'FAILURE' },
+					error: { $set: action.error }
+				}
+			});
+
+		case types.MEMO_COMMENTREMOVE:
+			return update(state, {
+				commentRemove: {
+					status: { $set: 'WAITING' },
+					error: { $set: -1 }
+				}
+			});
+		case types.MEMO_COMMENTREMOVE_SUCCESS:
+			return update(state, {
+				commentRemove: {
+					status: { $set: 'SUCCESS' }
+				},
+				list: {
+					data: {
+						[action.index]: { 
+							comments: { $splice : [[action.commentIdx, 1]]}	
+						}
+					}
+				}
+			});
+		case types.MEMO_COMMENTREMOVE_FAILURE:
+			return update(state, {
+				commentRemove: {
 					status: { $set: 'FAILURE' },
 					error: { $set: action.error }
 				}

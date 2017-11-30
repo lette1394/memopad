@@ -33,6 +33,7 @@
     "react-materialize": "^1.1.0",
     "react-redux": "^4.4.5",
     "react-router": "^2.6.1",
+    "react-spinners": "^0.2.5",
     "react-summernote": "^2.0.0",
     "react-timeago": "^3.1.2",
     "redux": "^3.5.2",

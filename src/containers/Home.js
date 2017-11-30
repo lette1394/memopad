@@ -9,7 +9,8 @@ import {
 	memoEditRequest,
 	memoRemoveRequest,
 	memoStarRequest,
-	memoCommentRequest
+	memoCommentRequest,
+	memoCommentRemoveRequest
 } from 'actions/memo';
 
 
@@ -25,7 +26,8 @@ class Home extends React.Component {
 		this.loadNewMemo = this.loadNewMemo.bind(this);
 		this.loadOldMemo = this.loadOldMemo.bind(this);
 		this.handleComment = this.handleComment.bind(this);
-
+		this.handleCommentRemove = this.handleCommentRemove.bind(this);
+		
 		this.state = {
 			loadingState: false,
 			initiallyLoaded: false
@@ -240,7 +242,36 @@ class Home extends React.Component {
 
 				// NOTIFY ERROR
 				let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[this.props.commentStatus.error - 1] + '</span>');
-				Materialize.toast($toastContent, 2000);
+				Materialize.toast($toastContent, 4000);
+			}
+		})
+	}
+
+	handleCommentRemove(id, index, memoId, memoIndex) {
+		this.props.memoCommentRemoveRequest(id, index, memoId, memoIndex).then(() => {
+			if (this.props.commentRemoveStatus.status === "SUCCESS") {
+				//toast!
+				Materialize.toast("댓글을 지웠습니다", 4000);				
+
+			} else {
+				/*
+				DELETE MEMO: DELETE /api/memo/:id
+				ERROR CODES
+						1: INVALID ID
+						2: NOT LOGGED IN
+						3: NO RESOURCE
+						4: PERMISSION FAILURE
+				*/
+				let errorMessage = [
+					'Something broke',
+					'로그인 해주세요',
+					'댓글이 존재하지 않습니다',
+					'권한이 없습니다'
+				];
+
+				// NOTIFY ERROR
+				let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[this.props.commentStatus.error - 1] + '</span>');
+				Materialize.toast($toastContent, 4000);
 			}
 		})
 	}
@@ -359,6 +390,7 @@ class Home extends React.Component {
 					onEdit={this.handleEdit}
 					onComment={this.handleComment}
 					onRemove={this.handleRemove}
+					onCommentRemove={this.handleCommentRemove}
 					onStar={this.handleStar} />
 			</div>
 		);
@@ -387,7 +419,8 @@ const mapStateToProps = (state) => {
 		editStatus: state.memo.edit,
 		removeStatus: state.memo.remove,
 		starStatus: state.memo.star,
-		commentStatus: state.memo.comment
+		commentStatus: state.memo.comment,
+		commentRemoveStatus: state.memo.commentRemove
 	};
 };
 
@@ -410,7 +443,10 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		memoCommentRequest: (id, index, comment) => {
 			return dispatch(memoCommentRequest(id, index, comment));
-		}
+		},
+		memoCommentRemoveRequest: (id, index, memoId, memoIndex) => {
+			return dispatch(memoCommentRemoveRequest(id, index, memoId, memoIndex));
+		},
 	};
 };
 
