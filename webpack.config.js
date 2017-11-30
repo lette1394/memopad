@@ -21,7 +21,7 @@ module.exports = {
                     cacheDirectory: true,
 										presets: ['es2015', 'react']					
                 })],
-                exclude: /node_modules/
+                exclude: /node_modules/ 
             },
             {
                 test: /\.css$/,
