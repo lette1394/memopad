@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+	value: true
 });
 
 var _mongoose = require('mongoose');
@@ -13,15 +13,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Schema = _mongoose2.default.Schema;
 
 var Memo = new Schema({
-    writer: String,
-    nickname: String,
-    contents: String,
-    starred: [String],
-    date: {
-        created: { type: Date, default: Date.now },
-        edited: { type: Date, default: Date.now }
-    },
-    is_edited: { type: Boolean, default: false }
+	writer: String,
+	nickname: String,
+	postedBy: {
+		type: Schema.Types.ObjectId,
+		ref: 'account'
+	},
+	contents: String,
+	starred: [String],
+	date: {
+		created: { type: Date, default: Date.now },
+		edited: { type: Date, default: Date.now }
+	},
+	is_edited: { type: Boolean, default: false },
+	comments: [{
+		text: String,
+		starred: [String],
+		postedBy: {
+			type: Schema.Types.ObjectId,
+			ref: 'account'
+		}
+	}]
 });
 
 exports.default = _mongoose2.default.model('memo', Memo);

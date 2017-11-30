@@ -16,6 +16,8 @@ var _async = require('async');
 
 var _async2 = _interopRequireDefault(_async);
 
+var _util = require('util');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
@@ -185,7 +187,6 @@ router.get('/search', function (req, res) {
 });
 
 //MODIFY accounts: PUT /api/account/modify
-
 router.put('/modify/:username', function (req, res) {
 	_account2.default.findOne({ username: req.params.username }, function (err, change) {
 		if (err) return res.status(500).json({ error: 'db fail' });
@@ -195,64 +196,93 @@ router.put('/modify/:username', function (req, res) {
 
 		//CHECK PASS
 		var checkPass = function checkPass(callback) {
+			var isError = false;
+
 			if (req.body.password) {
 				// CHECK PASS LENGTH
 				if (req.body.password.length < 4 || typeof req.body.password !== "string") {
-					callback(null, true);
+					isError = true;
 					tempStatus = {
 						error: "BAD PASSWORD",
 						code: 2
 					};
+					res.status(500);
 				}
 				change.password = change.generateHash(req.body.password);
 				change.save(function (err) {
 					if (err) res.status(500).json({ error: "fail to update" });
 				});
-				callback(null, false);
 			}
+			callback(isError, true);
 		};
 
 		//CHECK NICKNAME
 		var checkNick = function checkNick(callback) {
-			if (req.body.nickname) {
-				// CHECK nickname FORMAT
-				var nicknameRegex = /^[가-힣A-Za-z0-9_]+$/;
-				if (!nicknameRegex.test(req.body.nickname)) {
-					callback(null, true);
-					tempStatus = {
-						error: "BAD NICKNAME",
-						code: 5
-					};
+
+			var checkReg = function checkReg(callback) {
+				var isError = false;
+
+				if (req.body.nickname) {
+					// CHECK nickname FORMAT
+					var nicknameRegex = /^[가-힣A-Za-z0-9_]+$/;
+					if (!nicknameRegex.test(req.body.nickname)) {
+						isError = true;
+						tempStatus = {
+							error: "BAD NICKNAME",
+							code: 5
+						};
+					}
 				}
+				callback(isError, true);
+			};
 
-				// CHECK NICKNAME EXISTANCE
+			// CHECK NICKNAME EXISTANCE
+			var checkDuplicate = function checkDuplicate(callback) {
+				var isError = false;
+
 				_account2.default.findOne({ nickname: req.body.nickname }, function (err, exists) {
-					var called = false;
-
 					if (err) throw err;
 					if (exists) {
-						callback(null, true);
-						called = true;
+						isError = true;
+						console.log("iserror:" + isError);
 						tempStatus = {
 							error: "NICKNAME EXISTS",
 							code: 4
 						};
+					} else {
+						change.nickname = req.body.nickname;
+						change.save(function (err) {
+							if (err) res.status(500).json({ error: "fail to update" });
+						});
 					}
-
-					change.nickname = req.body.nickname;
-					change.save(function (err) {
-						if (err) res.status(500).json({ error: "fail to update" });
-					});
-					if (!called) {
-						callback(null, false);
-					}
+					callback(isError, true);
 				});
+			};
+
+			if (req.body.nickname) {
+				var _tasks = [checkReg, checkDuplicate];
+				_async2.default.series(_tasks, function (err, result) {
+					callback(err, true);
+				});
+			} else {
+				callback(false, true);
 			}
 		};
 
 		var tasks = [checkNick, checkPass];
 		_async2.default.series(tasks, function (err, result) {
-			return res.json(tempStatus);
+			if (!err) {
+				console.log('not error');
+				console.log(res.statusCode);
+				console.log(tempStatus);
+				return res.json(tempStatus);
+			} else {
+				console.log('error');
+				res.status(401);
+				console.log(res.statusCode);
+				console.log(tempStatus);
+				return res.json(tempStatus);
+			}
 		});
 	});
 });
