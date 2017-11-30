@@ -15,7 +15,7 @@ class App extends React.Component {
 	handleLogout() {
 		this.props.logoutRequest().then(
 			() => {
-				Materialize.toast('Good Bye!', 2000);
+				Materialize.toast('로그아웃 되었습니다', 2000);
 
 				// EMPTIES THE SESSION
 				let loginData = {

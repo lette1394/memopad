@@ -629,4 +629,15 @@ time {
 	margin-left: 1rem;
 }
 
+.modal {
+	width: 60%;
+}
 
+#modal-logout {
+	z-index: 15000;
+	color: black;
+}
+
+.modal-overlay {
+	z-index: 0 !important;
+}

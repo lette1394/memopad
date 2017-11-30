@@ -21,6 +21,8 @@ class Memo extends React.Component {
 		this.handleStar = this.handleStar.bind(this);
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.handleComment = this.handleComment.bind(this);
+		this.handleCommentRemove = this.handleCommentRemove.bind(this);
+		this.handleCommentRemoveModal = this.handleCommentRemoveModal.bind(this);
 	}
 
 	componentDidMount() {
@@ -29,6 +31,8 @@ class Memo extends React.Component {
 		$('#dropdown-button-' + this.props.data._id).dropdown({
 			belowOrigin: true // Displays dropdown below the button
 		});
+
+		$('.modal').modal({startingTop: '5%', endingTop: '25%'});
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -128,6 +132,14 @@ class Memo extends React.Component {
 		});
 	}
 
+	handleCommentRemoveModal() {
+		$('#modal1').modal('open');
+	}
+
+	handleCommentRemove() {
+		alert();
+	}
+
 	handleRemove() {
 		const id = this.props.data._id;
 		const index = this.props.index;
@@ -158,7 +170,8 @@ class Memo extends React.Component {
 					<div className='comments'>
 							<span className='nickname'>{comment.postedBy.nickname}</span>
 							<span className='text'>{comment.text}</span>
-							<span className='right'><i className='right-align material-icons'>clear</i></span>
+							{ comment.postedBy.username == this.props.currentUser ? <span className='right'><i onClick={this.handleCommentRemoveModal} className='right-align material-icons'>clear</i></span> : undefined }
+							{ comment.postedBy.username == this.props.currentUser ? commentRemoveModal : undefined }
 					</div>
 				);
 			});
@@ -177,6 +190,19 @@ class Memo extends React.Component {
 				</ul>
 			</div>
 		);
+
+		const commentRemoveModal = (
+			<div id="modal1" className="modal">
+				<div className="modal-content">
+					<h5>삭제 확인</h5>
+					<p>정말 삭제하시겠습니까?</p>
+				</div>
+				<div className="modal-footer">
+					<a className="modal-action modal-close waves-effect waves-red btn-flat">Cancle</a>
+					<a onClick={this.handleCommentRemove} className="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+				</div>
+			</div>		
+		)
 
 		// EDITED info
 		const editedInfo = (
@@ -216,7 +242,6 @@ class Memo extends React.Component {
 
 		const dumb = (
 			<div className="card-action">
-				
 			</div>
 		)
 

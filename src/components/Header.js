@@ -13,6 +13,11 @@ class Header extends React.Component {
 		};
 
 		this.toggleSearch = this.toggleSearch.bind(this);
+		this.handleLogoutConfirmModal = this.handleLogoutConfirmModal.bind(this);
+	}
+
+	componentDidMount() {
+		$('.modal').modal({startingTop: '5%', endingTop: '25%'});
 	}
 
 	toggleSearch() {
@@ -21,7 +26,24 @@ class Header extends React.Component {
 		});
 	}
 
+	handleLogoutConfirmModal() {
+		$('#modal-logout').modal('open');
+	}
+
 	render() {
+		const logoutModal = (
+			<div id="modal-logout" className="modal">
+				<div className="modal-content">
+					<h5>가지말아요</h5>
+					<p>정말 로그아웃 하시겠습니까?</p>
+				</div>
+				<div className="modal-footer">
+					<a className="modal-action modal-close waves-effect waves-red btn-flat">Cancle</a>
+					<a onClick={this.props.onLogout} className="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+				</div>
+			</div>		
+		)
+
 		const loginButton = (
 			<li>
 				<Link to="/login"><i className="material-icons">vpn_key</i>로그인</Link>
@@ -30,7 +52,7 @@ class Header extends React.Component {
 
 		const logoutButton = (
 			<li>
-				<a onClick={this.props.onLogout}><i className="material-icons">lock_open</i>로그아웃</a>
+				<a onClick={this.handleLogoutConfirmModal}><i className="material-icons">lock_open</i>로그아웃</a>
 			</li>
 		);
 	
@@ -59,13 +81,15 @@ class Header extends React.Component {
 		);
 
 		return (
-			<div >
+			<div>
 				<nav className='fixed'>
 					<div className="nav-wrapper red lighten-2">
 						<Link to="/" className="brand-logo center">TIMELINE</Link>
 					
 						<ul>
 							<li>{sideNavigation}</li>
+							{ this.props.isLoggedIn ? logoutModal : undefined }								
+							
 							<li className='right'><a onClick={this.toggleSearch}><i className="material-icons">search</i></a></li>
 						</ul>
 					</div>
