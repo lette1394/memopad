@@ -12,7 +12,7 @@ class UploadFiles extends Component {
         let formData = new FormData();
         formData.append('file', this.state.file);
 
-        axios.post('/api/memo/uploadImages', formData)
+        axios.post('/api/memo/upload', formData)
             .then((response) => {
                 console.log(response);
             })
@@ -28,7 +28,7 @@ class UploadFiles extends Component {
     render(){
         return(
             <form onSubmit={this.handleSubmit.bind(this)}>
-                <input type="file" onChange={this.handleChange.bind(this)}  multiple/>
+                <input type="file" onChange={this.handleChange.bind(this)}/>
                 <button type="submit">Submit</button>
             </form>
         );

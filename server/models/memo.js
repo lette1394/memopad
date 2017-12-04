@@ -23,7 +23,8 @@ const Memo = new Schema({
 			type: Schema.Types.ObjectId,
 			ref: 'account'
 		}
-	}]
+	}],
+	imgPath: String
 });
 
 export default mongoose.model('memo', Memo);

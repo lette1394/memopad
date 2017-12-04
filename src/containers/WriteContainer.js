@@ -9,7 +9,8 @@ class Write extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            contents: ''
+            contents: '',
+            imagePath: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.handlePost = this.handlePost.bind(this);
@@ -23,6 +24,7 @@ class Write extends React.Component {
 
     handlePost() {
         let contents = this.state.contents;
+        let images = this.state.images;
         return this.props.memoPostRequest(contents).then(
             () => {
                 if (this.props.postStatus.status === "SUCCESS") {
@@ -65,12 +67,12 @@ class Write extends React.Component {
             <div className="container write">
                 <div className="card">
                     <div className="card-content">
-						<textarea className="materialize-textarea" placeholder="내용을 입력해주세요"
+						<textarea className="materialize-textarea" placeholder="내용을 입력해주세요1"
                                   value={this.state.contents}
-                                  onChange={this.handleChange}></textarea>
+                                  onChange={this.handleChange}/>
                     </div>
                     <div>
-                        <UploadFiles></UploadFiles>
+                        <UploadFiles/>
                     </div>
                     <div className="card-action">
                         <a onClick={this.handlePost}>POST</a>
