@@ -20,6 +20,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var router = _express2.default.Router();
 
+var multer = require('multer'); // express에 multer모듈 적용 (for 파일업로드)
+var upload = multer({ dest: 'uploads/' })
+
 /*
     WRITE MEMO: POST /api/memo
     BODY SAMPLE: { contents: "sample "}

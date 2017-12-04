@@ -39,6 +39,9 @@ class Write extends React.Component {
 							value={this.state.contents}
 							onChange={this.handleChange}></textarea>
 					</div>
+					<div>
+						<UploadFiles></UploadFiles>
+					</div>
 					<div className="card-action">
 						<a onClick={this.handlePost}>POST</a>
 					</div>

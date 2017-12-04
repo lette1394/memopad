@@ -3,6 +3,7 @@ import Memo from '../models/memo';
 import mongoose from 'mongoose';
 
 const router = express.Router();
+var multer = require('multer');
 
 /*
     WRITE MEMO: POST /api/memo
@@ -489,6 +490,21 @@ router.post('/comment/remove/:id', (req, res) => {
 			});
 		});
 	});
+});
+
+
+router.post('/upload', multer({ dest: 'uploads/'}).single('file'), function(req,res){
+
+    console.log(req.body);
+    console.log(req.file);
+
+    res.send('Uploaded! : '+req.file); // object를 리턴함
+    res.end();
+});
+
+router.post('/uploadImages', multer({ dest: 'uploads/'}).array('file', 12), function (req, res, next) {
+    console.log(req.file);
+    console.log(req.body);
 });
 
 export default router;
