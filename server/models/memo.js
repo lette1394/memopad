@@ -24,7 +24,7 @@ const Memo = new Schema({
 			ref: 'account'
 		}
 	}],
-	imgPath: String
+	image : String
 });
 
 export default mongoose.model('memo', Memo);

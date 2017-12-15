@@ -4,16 +4,26 @@ import {memoPostRequest} from 'actions/memo';
 import {browserHistory} from 'react-router';
 import UploadFiles from "./FileUpload";
 
-class Write extends React.Component {
 
+class Write extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             contents: '',
-            imagePath: ''
+            file: undefined
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleFileChanged = this.handleFileChanged.bind(this);
         this.handlePost = this.handlePost.bind(this);
+    }
+
+    handleFileChanged(file){
+        console.log('FileChanged!');
+        this.setState({
+            file : file
+        }, function () {
+            console.log(this.state.file);
+        });
     }
 
     handleChange(e) {
@@ -24,10 +34,12 @@ class Write extends React.Component {
 
     handlePost() {
         let contents = this.state.contents;
-        let images = this.state.images;
-        return this.props.memoPostRequest(contents).then(
+        let file = this.state.file;
+
+        return this.props.memoPostRequest(contents, file).then(
             () => {
                 if (this.props.postStatus.status === "SUCCESS") {
+                    // this.handleSubmit();
                     Materialize.toast("저장되었습니다.", 4000);
                     browserHistory.push('/');
                 } else {
@@ -72,7 +84,7 @@ class Write extends React.Component {
                                   onChange={this.handleChange}/>
                     </div>
                     <div>
-                        <UploadFiles/>
+                        <UploadFiles onFileChanged={this.handleFileChanged} />
                     </div>
                     <div className="card-action">
                         <a onClick={this.handlePost}>POST</a>
@@ -101,8 +113,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        memoPostRequest: (contents) => {
-            return dispatch(memoPostRequest(contents));
+        memoPostRequest: (contents,file) => {
+            return dispatch(memoPostRequest(contents, file));
         }
     };
 };

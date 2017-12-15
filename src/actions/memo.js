@@ -23,13 +23,23 @@ import {
 		
 } from './ActionTypes';
 import axios from 'axios';
+var path = require('path');
 
 /* MEMO POST */
-export function memoPostRequest(contents) {
+export function memoPostRequest(contents, file) {
     return (dispatch) => {
         dispatch(memoPost());
 
-        return axios.post('/api/memo/', { contents })
+        const formData = {
+            file : file,
+            fileName : file.name,
+            fileName2 : file.originalname,
+            contents : contents
+        };
+
+        console.log(formData);
+
+        return axios.post('/api/memo/', { formData : 'aaaa' })
         .then((response) => {
             dispatch(memoPostSuccess());
         }).catch((error) => {
