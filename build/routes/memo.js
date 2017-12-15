@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
 
 var _express = require('express');
@@ -19,10 +19,16 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
-
-var multer = require('multer'); // express에 multer모듈 적용 (for 파일업로드)
-var upload = multer({ dest: 'uploads/' })
-
+var path = require('path');
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination: function destination(req, file, cb) {
+        cb(null, 'uploads');
+    },
+    filename: function filename(req, file, cb) {
+        cb(null, 'img_' + Date.now() + '.' + path.extname(file.originalname));
+    }
+});
 /*
     WRITE MEMO: POST /api/memo
     BODY SAMPLE: { contents: "sample "}
@@ -31,42 +37,43 @@ var upload = multer({ dest: 'uploads/' })
         2: EMPTY CONTENTS
 */
 router.post('/', function (req, res) {
-	// CHECK LOGIN STATUS
-	if (typeof req.session.loginInfo === 'undefined') {
-		return res.status(403).json({
-			error: "NOT LOGGED IN",
-			code: 1
-		});
-	}
+    // CHECK LOGIN STATUS
+    if (typeof req.session.loginInfo === 'undefined') {
+        return res.status(403).json({
+            error: "NOT LOGGED IN",
+            code: 1
+        });
+    }
 
-	// CHECK CONTENTS VALID
-	if (typeof req.body.contents !== 'string') {
-		return res.status(400).json({
-			error: "EMPTY CONTENTS",
-			code: 2
-		});
-	}
+    // CHECK CONTENTS VALID
+    if (typeof req.body.contents !== 'string') {
+        return res.status(400).json({
+            error: "EMPTY CONTENTS",
+            code: 2
+        });
+    }
 
-	if (req.body.contents === "") {
-		return res.status(400).json({
-			error: "EMPTY CONTENTS",
-			code: 2
-		});
-	}
+    if (req.body.contents === "") {
+        return res.status(400).json({
+            error: "EMPTY CONTENTS",
+            code: 2
+        });
+    }
 
-	// CREATE NEW MEMO
-	var memo = new _memo2.default({
-		writer: req.session.loginInfo.username,
-		nickname: req.session.loginInfo.nickname,
-		postedBy: req.session.loginInfo._id,
-		contents: req.body.contents
-	});
+    // CREATE NEW MEMO
+    var memo = new _memo2.default({
+        writer: req.session.loginInfo.username,
+        nickname: req.session.loginInfo.nickname,
+        postedBy: req.session.loginInfo._id,
+        contents: req.body.contents,
+        images: req.body.images
+    });
 
-	// SAVE IN DATABASE
-	memo.save(function (err) {
-		if (err) throw err;
-		return res.json({ success: true });
-	});
+    // SAVE IN DATABASE
+    memo.save(function (err) {
+        if (err) throw err;
+        return res.json({ success: true });
+    });
 });
 
 /*
@@ -81,74 +88,74 @@ router.post('/', function (req, res) {
 */
 router.put('/:id', function (req, res) {
 
-	// CHECK MEMO ID VALIDITY
-	if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).json({
-			error: "INVALID ID",
-			code: 1
-		});
-	}
+    // CHECK MEMO ID VALIDITY
+    if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({
+            error: "INVALID ID",
+            code: 1
+        });
+    }
 
-	// CHECK CONTENTS VALID
-	if (typeof req.body.contents !== 'string') {
-		return res.status(400).json({
-			error: "EMPTY CONTENTS",
-			code: 2
-		});
-	}
+    // CHECK CONTENTS VALID
+    if (typeof req.body.contents !== 'string') {
+        return res.status(400).json({
+            error: "EMPTY CONTENTS",
+            code: 2
+        });
+    }
 
-	if (req.body.contents === "") {
-		return res.status(400).json({
-			error: "EMPTY CONTENTS",
-			code: 2
-		});
-	}
+    if (req.body.contents === "") {
+        return res.status(400).json({
+            error: "EMPTY CONTENTS",
+            code: 2
+        });
+    }
 
-	// CHECK LOGIN STATUS
-	if (typeof req.session.loginInfo === 'undefined') {
-		return res.status(403).json({
-			error: "NOT LOGGED IN",
-			code: 3
-		});
-	}
+    // CHECK LOGIN STATUS
+    if (typeof req.session.loginInfo === 'undefined') {
+        return res.status(403).json({
+            error: "NOT LOGGED IN",
+            code: 3
+        });
+    }
 
-	// FIND MEMO
-	_memo2.default.findById(req.params.id, function (err, memo) {
-		if (err) throw err;
+    // FIND MEMO
+    _memo2.default.findById(req.params.id, function (err, memo) {
+        if (err) throw err;
 
-		// IF MEMO DOES NOT EXIST
-		if (!memo) {
-			return res.status(404).json({
-				error: "NO RESOURCE",
-				code: 4
-			});
-		}
+        // IF MEMO DOES NOT EXIST
+        if (!memo) {
+            return res.status(404).json({
+                error: "NO RESOURCE",
+                code: 4
+            });
+        }
 
-		// IF EXISTS, CHECK WRITER
-		if (memo.writer != req.session.loginInfo.username) {
-			return res.status(403).json({
-				error: "PERMISSION FAILURE",
-				code: 5
-			});
-		}
+        // IF EXISTS, CHECK WRITER
+        if (memo.writer != req.session.loginInfo.username) {
+            return res.status(403).json({
+                error: "PERMISSION FAILURE",
+                code: 5
+            });
+        }
 
-		// MODIFY AND SAVE IN DATABASE
-		memo.contents = req.body.contents;
-		memo.date.edited = new Date();
-		memo.is_edited = true;
+        // MODIFY AND SAVE IN DATABASE
+        memo.contents = req.body.contents;
+        memo.date.edited = new Date();
+        memo.is_edited = true;
 
-		memo.save(function (err, memo) {
-			if (err) throw err;
+        memo.save(function (err, memo) {
+            if (err) throw err;
 
-			_memo2.default.findOne({ _id: memo._id }).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memo) {
-				if (err) throw err;
-				return res.json({
-					success: true,
-					memo: memo
-				});
-			});
-		});
-	});
+            _memo2.default.findOne({ _id: memo._id }).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memo) {
+                if (err) throw err;
+                return res.json({
+                    success: true,
+                    memo: memo
+                });
+            });
+        });
+    });
 });
 
 /*
@@ -161,96 +168,96 @@ router.put('/:id', function (req, res) {
 */
 router.delete('/:id', function (req, res) {
 
-	// CHECK MEMO ID VALIDITY
-	if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).json({
-			error: "INVALID ID",
-			code: 1
-		});
-	}
+    // CHECK MEMO ID VALIDITY
+    if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({
+            error: "INVALID ID",
+            code: 1
+        });
+    }
 
-	// CHECK LOGIN STATUS
-	if (typeof req.session.loginInfo === 'undefined') {
-		return res.status(403).json({
-			error: "NOT LOGGED IN",
-			code: 2
-		});
-	}
+    // CHECK LOGIN STATUS
+    if (typeof req.session.loginInfo === 'undefined') {
+        return res.status(403).json({
+            error: "NOT LOGGED IN",
+            code: 2
+        });
+    }
 
-	// FIND MEMO AND CHECK FOR WRITER
-	_memo2.default.findById(req.params.id, function (err, memo) {
-		if (err) throw err;
+    // FIND MEMO AND CHECK FOR WRITER
+    _memo2.default.findById(req.params.id, function (err, memo) {
+        if (err) throw err;
 
-		if (!memo) {
-			return res.status(404).json({
-				error: "NO RESOURCE",
-				code: 3
-			});
-		}
-		if (memo.writer != req.session.loginInfo.username) {
-			return res.status(403).json({
-				error: "PERMISSION FAILURE",
-				code: 4
-			});
-		}
+        if (!memo) {
+            return res.status(404).json({
+                error: "NO RESOURCE",
+                code: 3
+            });
+        }
+        if (memo.writer != req.session.loginInfo.username) {
+            return res.status(403).json({
+                error: "PERMISSION FAILURE",
+                code: 4
+            });
+        }
 
-		// REMOVE THE MEMO
-		_memo2.default.remove({ _id: req.params.id }, function (err) {
-			if (err) throw err;
-			res.json({ success: true });
-		});
-	});
+        // REMOVE THE MEMO
+        _memo2.default.remove({ _id: req.params.id }, function (err) {
+            if (err) throw err;
+            res.json({ success: true });
+        });
+    });
 });
 
 /*
     READ MEMO: GET /api/memo
 */
 router.get('/', function (req, res) {
-	_memo2.default.find().sort({ "_id": -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
-		if (err) throw err;
+    _memo2.default.find().sort({ "_id": -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
+        if (err) throw err;
 
-		res.json(memos);
-	});
+        res.json(memos);
+    });
 });
 
 /*
     READ ADDITIONAL (OLD/NEW) MEMO: GET /api/memo/:listType/:id
 */
 router.get('/:listType/:id', function (req, res) {
-	var listType = req.params.listType;
-	var id = req.params.id;
+    var listType = req.params.listType;
+    var id = req.params.id;
 
-	// CHECK LIST TYPE VALIDITY
-	if (listType !== 'old' && listType !== 'new') {
-		return res.status(400).json({
-			error: "INVALID LISTTYPE",
-			code: 1
-		});
-	}
+    // CHECK LIST TYPE VALIDITY
+    if (listType !== 'old' && listType !== 'new') {
+        return res.status(400).json({
+            error: "INVALID LISTTYPE",
+            code: 1
+        });
+    }
 
-	// CHECK MEMO ID VALIDITY
-	if (!_mongoose2.default.Types.ObjectId.isValid(id)) {
-		return res.status(400).json({
-			error: "INVALID ID",
-			code: 2
-		});
-	}
+    // CHECK MEMO ID VALIDITY
+    if (!_mongoose2.default.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+            error: "INVALID ID",
+            code: 2
+        });
+    }
 
-	var objId = new _mongoose2.default.Types.ObjectId(req.params.id);
+    var objId = new _mongoose2.default.Types.ObjectId(req.params.id);
 
-	if (listType === 'new') {
-		// GET NEWER MEMO
-		_memo2.default.find({ _id: { $gt: objId } }).sort({ _id: -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
-			if (err) throw err;
-			return res.json(memos);
-		});
-	} else {
-		// GET OLDER MEMO
-		_memo2.default.find({ _id: { $lt: objId } }).sort({ _id: -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
-			if (err) throw err;
-			return res.json(memos);
-		});
-	}
+    if (listType === 'new') {
+        // GET NEWER MEMO
+        _memo2.default.find({ _id: { $gt: objId } }).sort({ _id: -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
+            if (err) throw err;
+            return res.json(memos);
+        });
+    } else {
+        // GET OLDER MEMO
+        _memo2.default.find({ _id: { $lt: objId } }).sort({ _id: -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
+            if (err) throw err;
+            return res.json(memos);
+        });
+    }
 });
 
 /*
@@ -261,205 +268,223 @@ router.get('/:listType/:id', function (req, res) {
         3: NO RESOURCE
 */
 router.post('/star/:id', function (req, res) {
-	// CHECK MEMO ID VALIDITY
-	if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).json({
-			error: "INVALID ID",
-			code: 1
-		});
-	}
+    // CHECK MEMO ID VALIDITY
+    if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({
+            error: "INVALID ID",
+            code: 1
+        });
+    }
 
-	// CHECK LOGIN STATUS
-	if (typeof req.session.loginInfo === 'undefined') {
-		return res.status(403).json({
-			error: "NOT LOGGED IN",
-			code: 2
-		});
-	}
+    // CHECK LOGIN STATUS
+    if (typeof req.session.loginInfo === 'undefined') {
+        return res.status(403).json({
+            error: "NOT LOGGED IN",
+            code: 2
+        });
+    }
 
-	// FIND MEMO
-	_memo2.default.findById(req.params.id, function (err, memo) {
-		if (err) throw err;
+    // FIND MEMO
+    _memo2.default.findById(req.params.id, function (err, memo) {
+        if (err) throw err;
 
-		// MEMO DOES NOT EXIST
-		if (!memo) {
-			return res.status(404).json({
-				error: "NO RESOURCE",
-				code: 3
-			});
-		}
+        // MEMO DOES NOT EXIST
+        if (!memo) {
+            return res.status(404).json({
+                error: "NO RESOURCE",
+                code: 3
+            });
+        }
 
-		// GET INDEX OF USERNAME IN THE ARRAY
-		var index = memo.starred.indexOf(req.session.loginInfo.username);
+        // GET INDEX OF USERNAME IN THE ARRAY
+        var index = memo.starred.indexOf(req.session.loginInfo.username);
 
-		// CHECK WHETHER THE USER ALREADY HAS GIVEN A STAR
-		var hasStarred = index === -1 ? false : true;
+        // CHECK WHETHER THE USER ALREADY HAS GIVEN A STAR
+        var hasStarred = index === -1 ? false : true;
 
-		if (!hasStarred) {
-			// IF IT DOES NOT EXIST
-			memo.starred.push(req.session.loginInfo.username);
-		} else {
-			// ALREADY starred
-			memo.starred.splice(index, 1);
-		}
+        if (!hasStarred) {
+            // IF IT DOES NOT EXIST
+            memo.starred.push(req.session.loginInfo.username);
+        } else {
+            // ALREADY starred
+            memo.starred.splice(index, 1);
+        }
 
-		// SAVE THE MEMO
-		memo.save(function (err, memo) {
-			if (err) throw err;
+        // SAVE THE MEMO
+        memo.save(function (err, memo) {
+            if (err) throw err;
 
-			_memo2.default.findOne({ _id: memo._id }).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memo) {
-				if (err) throw err;
-				res.json({
-					success: true,
-					'has_starred': !hasStarred,
-					memo: memo
-				});
-			});
-		});
-	});
+            _memo2.default.findOne({ _id: memo._id }).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memo) {
+                if (err) throw err;
+                res.json({
+                    success: true,
+                    'has_starred': !hasStarred,
+                    memo: memo
+                });
+            });
+        });
+    });
 });
 
 /*
     READ MEMO OF A USER: GET /api/memo/:username
 */
 router.get('/:username', function (req, res) {
-	_memo2.default.find({ writer: req.params.username }).sort({ "_id": -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
-		if (err) throw err;
-		res.json(memos);
-	});
+    _memo2.default.find({ writer: req.params.username }).sort({ "_id": -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
+        if (err) throw err;
+        res.json(memos);
+    });
 });
 
 /*
     READ ADDITIONAL (OLD/NEW) MEMO OF A USER: GET /api/memo/:username/:listType/:id
 */
 router.get('/:username/:listType/:id', function (req, res) {
-	var listType = req.params.listType;
-	var id = req.params.id;
+    var listType = req.params.listType;
+    var id = req.params.id;
 
-	// CHECK LIST TYPE VALIDITY
-	if (listType !== 'old' && listType !== 'new') {
-		return res.status(400).json({
-			error: "INVALID LISTTYPE",
-			code: 1
-		});
-	}
+    // CHECK LIST TYPE VALIDITY
+    if (listType !== 'old' && listType !== 'new') {
+        return res.status(400).json({
+            error: "INVALID LISTTYPE",
+            code: 1
+        });
+    }
 
-	// CHECK MEMO ID VALIDITY
-	if (!_mongoose2.default.Types.ObjectId.isValid(id)) {
-		return res.status(400).json({
-			error: "INVALID ID",
-			code: 2
-		});
-	}
+    // CHECK MEMO ID VALIDITY
+    if (!_mongoose2.default.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+            error: "INVALID ID",
+            code: 2
+        });
+    }
 
-	var objId = new _mongoose2.default.Types.ObjectId(req.params.id);
+    var objId = new _mongoose2.default.Types.ObjectId(req.params.id);
 
-	if (listType === 'new') {
-		// GET NEWER MEMO
-		_memo2.default.find({ writer: req.params.username, _id: { $gt: objId } }).sort({ _id: -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
-			if (err) throw err;
-			return res.json(memos);
-		});
-	} else {
-		// GET OLDER MEMO
-		_memo2.default.find({ writer: req.params.username, _id: { $lt: objId } }).sort({ _id: -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
-			if (err) throw err;
-			return res.json(memos);
-		});
-	}
+    if (listType === 'new') {
+        // GET NEWER MEMO
+        _memo2.default.find({ writer: req.params.username, _id: { $gt: objId } }).sort({ _id: -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
+            if (err) throw err;
+            return res.json(memos);
+        });
+    } else {
+        // GET OLDER MEMO
+        _memo2.default.find({ writer: req.params.username, _id: { $lt: objId } }).sort({ _id: -1 }).limit(6).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memos) {
+            if (err) throw err;
+            return res.json(memos);
+        });
+    }
 });
 
 router.post('/comment/:id', function (req, res) {
-	if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).json({
-			error: "INVALID ID",
-			code: 1
-		});
-	}
+    if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({
+            error: "INVALID ID",
+            code: 1
+        });
+    }
 
-	// CHECK LOGIN STATUS
-	if (typeof req.session.loginInfo === 'undefined') {
-		return res.status(403).json({
-			error: "NOT LOGGED IN",
-			code: 2
-		});
-	}
+    // CHECK LOGIN STATUS
+    if (typeof req.session.loginInfo === 'undefined') {
+        return res.status(403).json({
+            error: "NOT LOGGED IN",
+            code: 2
+        });
+    }
 
-	_memo2.default.findById(req.params.id, function (err, memo) {
-		if (err) throw err;
+    _memo2.default.findById(req.params.id, function (err, memo) {
+        if (err) throw err;
 
-		// MEMO DOES NOT EXIST
-		if (!memo) {
-			return res.status(404).json({
-				error: "NO RESOURCE",
-				code: 3
-			});
-		}
+        // MEMO DOES NOT EXIST
+        if (!memo) {
+            return res.status(404).json({
+                error: "NO RESOURCE",
+                code: 3
+            });
+        }
 
-		var newComment = {
-			postedBy: req.session.loginInfo._id,
-			text: req.body.comment,
-			starred: []
-		};
+        var newComment = {
+            postedBy: req.session.loginInfo._id,
+            text: req.body.comment,
+            starred: []
+        };
 
-		memo.comments.push(newComment);
+        memo.comments.push(newComment);
 
-		// SAVE THE MEMO
-		memo.save(function (err, memo) {
-			if (err) throw err;
+        // SAVE THE MEMO
+        memo.save(function (err, memo) {
+            if (err) throw err;
 
-			_memo2.default.findOne({ _id: memo._id }).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memo) {
-				if (err) throw err;
-				res.json({
-					success: true,
-					memo: memo
-				});
-			});
-		});
-	});
+            _memo2.default.findOne({ _id: memo._id }).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memo) {
+                if (err) throw err;
+                res.json({
+                    success: true,
+                    memo: memo
+                });
+            });
+        });
+    });
 });
 
 router.post('/comment/remove/:id', function (req, res) {
-	if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).json({
-			error: "INVALID ID",
-			code: 1
-		});
-	}
+    if (!_mongoose2.default.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({
+            error: "INVALID ID",
+            code: 1
+        });
+    }
 
-	// CHECK LOGIN STATUS
-	if (typeof req.session.loginInfo === 'undefined') {
-		return res.status(403).json({
-			error: "NOT LOGGED IN",
-			code: 2
-		});
-	}
+    // CHECK LOGIN STATUS
+    if (typeof req.session.loginInfo === 'undefined') {
+        return res.status(403).json({
+            error: "NOT LOGGED IN",
+            code: 2
+        });
+    }
 
-	_memo2.default.findById(req.params.id, function (err, memo) {
-		if (err) throw err;
+    _memo2.default.findById(req.params.id, function (err, memo) {
+        if (err) throw err;
 
-		// MEMO DOES NOT EXIST
-		if (!memo) {
-			return res.status(404).json({
-				error: "NO RESOURCE",
-				code: 3
-			});
-		}
-		memo.comments.splice(req.body.index, 1);
+        // MEMO DOES NOT EXIST
+        if (!memo) {
+            return res.status(404).json({
+                error: "NO RESOURCE",
+                code: 3
+            });
+        }
+        memo.comments.splice(req.body.index, 1);
 
-		// SAVE THE MEMO
-		memo.save(function (err, memo) {
-			if (err) throw err;
+        // SAVE THE MEMO
+        memo.save(function (err, memo) {
+            if (err) throw err;
 
-			_memo2.default.findOne({ _id: memo._id }).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memo) {
-				if (err) throw err;
-				res.json({
-					success: true,
-					memo: memo
-				});
-			});
-		});
-	});
+            _memo2.default.findOne({ _id: memo._id }).populate('postedBy', 'username nickname created').populate('comments.postedBy', 'username nickname created').exec(function (err, memo) {
+                if (err) throw err;
+                res.json({
+                    success: true,
+                    memo: memo
+                });
+            });
+        });
+    });
+});
+
+router.post('/upload', multer({ storage: storage }).single('file'), function (req, res) {
+    console.log(req.body);
+    console.log(req.file);
+    console.log(req.files);
+
+    res.send('Uploaded! : ' + req.file); // object를 리턴함
+    res.end();
+});
+
+router.post('/uploadImages', multer({ storage: storage }).array('file', 12), function (req, res, next) {
+    console.log('File count : ' + req.files.length);
+    for (var idx in req.files) {
+        console.log(req.files[idx]);
+    }
+    // console.log(req.files[0]);
+    console.log(req.body);
 });
 
 exports.default = router;

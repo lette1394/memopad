@@ -55,7 +55,7 @@ class Header extends React.Component {
 				<a onClick={this.handleLogoutConfirmModal}><i className="material-icons">lock_open</i>로그아웃</a>
 			</li>
 		);
-	
+
 		const sideNavigation = (
 			<div className='sideNav'>
 				<SideNav
@@ -66,8 +66,8 @@ class Header extends React.Component {
 						user={{
 							background: 'https://png.pngtree.com/thumb_back/fh260/back_pic/00/01/80/73560a545c6ae6b.jpg',
 							image: 'https://react-materialize.github.io/img/yuna.jpg',
-							name: 'User name',
-							email: 'abc@gmail.com'
+							name: this.props.isLoggedIn ? "아이디 : " + this.props.username : "USER ID", 
+							email: this.props.isLoggedIn ? "별명 : " + this.props.nickname : "NICKNAME",
 						}}
 					/>
 					<SideNavItem>{this.props.isLoggedIn ? logoutButton : loginButton}</SideNavItem>
@@ -75,7 +75,7 @@ class Header extends React.Component {
 					<SideNavItem subheader>회원메뉴</SideNavItem>
 					{ this.props.isLoggedIn ? <Link to="/write"><SideNavItem icon='create'>글쓰기</SideNavItem></Link> : undefined }
 					{ this.props.isLoggedIn ? <Link to="/modify"><SideNavItem icon='assignment_ind'>회원정보수정</SideNavItem></Link> : undefined }
-					<SideNavItem waves>Third Link With Waves</SideNavItem>
+					{ this.props.isLoggedIn ? undefined : <SideNavItem waves>로그인이 필요합니다</SideNavItem> }
 				</SideNav>
 			</div>
 		);
