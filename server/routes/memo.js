@@ -1,17 +1,11 @@
 import express from 'express';
 import Memo from '../models/memo';
 import mongoose from 'mongoose';
+
 const router = express.Router();
-var path = require('path');
 var multer = require('multer');
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads');
-    },
-    filename: function (req, file, cb) {
-        cb(null, 'img_' + Date.now()+'.'+ path.extname(file.originalname));
-    }
-});
+var bodyParser = require('body-parser');
+var path = require('path');
 /*
     WRITE MEMO: POST /api/memo
     BODY SAMPLE: { contents: "sample "}
@@ -19,7 +13,37 @@ var storage = multer.diskStorage({
         1: NOT LOGGED IN
         2: EMPTY CONTENTS
 */
+
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: false }));
+
 router.post('/', (req, res) => {
+    console.log('start memo/post : ' + req.body.formData);
+    console.log('start memo/post : ');
+    console.log(req.body);
+    console.log(req.body.formData);
+    var storage = multer.diskStorage({
+        destination: 'uploads/',
+        filename: req.body.fileName
+    });
+
+    var upload = multer({storage: storage}).single('file');
+
+    upload(req, res, function (err) {
+        if (err) {
+            console.log(err);
+            // return res.end("Error uploading file.");
+        } else {
+            console.log('upload in /memo/post : ');
+            console.log(req.body);
+            // req.file.forEach( function(f) {
+            //     console.log(f);
+            //     // and move file to final destination...
+            // });
+            // res.end("File has been uploaded");
+        }
+    });
+
     // CHECK LOGIN STATUS
     if (typeof req.session.loginInfo === 'undefined') {
         return res.status(403).json({
@@ -43,13 +67,17 @@ router.post('/', (req, res) => {
         });
     }
 
+    console.log('##server/memo');
+    console.log(req.body.contents);
+    console.log('!!server/memo');
+
     // CREATE NEW MEMO
     let memo = new Memo({
         writer: req.session.loginInfo.username,
         nickname: req.session.loginInfo.nickname,
         postedBy: req.session.loginInfo._id,
         contents: req.body.contents,
-        images: req.body.images
+        image: req.body.fileName
     });
 
     // SAVE IN DATABASE
@@ -497,25 +525,6 @@ router.post('/comment/remove/:id', (req, res) => {
                 });
         });
     });
-});
-
-
-router.post('/upload', multer({storage: storage}).single('file'), function (req, res) {
-    console.log(req.body);
-    console.log(req.file);
-    console.log(req.files);
-
-    res.send('Uploaded! : ' + req.file); // object를 리턴함
-    res.end();
-});
-
-router.post('/uploadImages', multer({storage: storage}).array('file', 12), function (req, res, next) {
-    console.log('File count : ' + req.files.length);
-    for (var idx in req.files) {
-        console.log(req.files[idx]);
-    }
-    // console.log(req.files[0]);
-    console.log(req.body);
 });
 
 export default router;

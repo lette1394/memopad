@@ -40,7 +40,7 @@ class Write extends React.Component {
 							onChange={this.handleChange}/>
 					</div>
 					<div>
-						<UploadFiles/>
+						<UploadFiles />
 					</div>
 					<div className="card-action">
 						<a onClick={this.handlePost}>POST</a>

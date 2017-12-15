@@ -33,7 +33,8 @@ var Memo = new Schema({
 			type: Schema.Types.ObjectId,
 			ref: 'account'
 		}
-	}]
+	}],
+	image: String
 });
 
 exports.default = _mongoose2.default.model('memo', Memo);
