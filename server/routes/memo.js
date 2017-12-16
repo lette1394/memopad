@@ -47,14 +47,10 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
         });
     }
 
-    console.log('extension : ');
-
-
     if (req.file && (path.extname(req.file.filename) !== ".jpg"
         && path.extname(req.file.filename) !== ".png"
             && path.extname(req.file.filename) !== ".jpeg"
             && path.extname(req.file.filename) !== ".gif")) {
-        console.log('[req.fields.contents]');
         return res.status(400).json({
             error: "NOT A IMAGE FILE",
             code: 3
@@ -80,7 +76,6 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
             contents: req.body.contents,
         });
     }
-    console.log('[before memo.save]');
 
     // SAVE IN DATABASE
     memo.save(err => {
