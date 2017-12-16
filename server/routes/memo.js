@@ -42,8 +42,8 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
 
     if (req.body.contents === "") {
         return res.status(400).json({
-            error: "UNSUPPORT FILE EXT",
-            code: 3
+            error: "EMPTY CONTENTS",
+            code: 2
         });
     }
     if (path.extname(req.file.filename) !== ".jpg"
@@ -51,7 +51,7 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
         && path.extname(req.file.filename) !== ".jpeg") {
         return res.status(400).json({
             error: "NOT A IMAGE FILE",
-            code: 2
+            code: 3
         });
     }
 

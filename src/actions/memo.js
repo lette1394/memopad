@@ -32,13 +32,6 @@ export function memoPostRequest(contents, file) {
         formData.append('contents', contents);
         formData.append('file', file);
 
-        console.log('[just formData]');
-        console.log(formData);
-
-        console.log('[Start of formData\'s data]');
-        // Display the key/value pairs
-        console.log('[End of formData\'s data]');
-
         return axios.post('/api/memo/', formData)
             .then((response) => {
                 dispatch(memoPostSuccess());
