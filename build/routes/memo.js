@@ -86,13 +86,6 @@ router.post('/', function (req, res) {
         });
     }
 
-<<<<<<< HEAD
-=======
-    console.log('##server/memo');
-    console.log(req.body.contents);
-    console.log('!!server/memo');
-
->>>>>>> origin/image_server
     // CREATE NEW MEMO
     var memo = new _memo2.default({
         writer: req.session.loginInfo.username,

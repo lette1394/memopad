@@ -46,23 +46,41 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
             code: 2
         });
     }
-    if (path.extname(req.file.filename) !== ".jpg"
+
+    console.log('extension : ');
+
+
+    if (req.file && (path.extname(req.file.filename) !== ".jpg"
         && path.extname(req.file.filename) !== ".png"
-        && path.extname(req.file.filename) !== ".jpeg") {
+            && path.extname(req.file.filename) !== ".jpeg"
+            && path.extname(req.file.filename) !== ".gif")) {
+        console.log('[req.fields.contents]');
         return res.status(400).json({
             error: "NOT A IMAGE FILE",
             code: 3
         });
     }
 
-    // CREATE NEW MEMO
-    let memo = new Memo({
-        writer: req.session.loginInfo.username,
-        nickname: req.session.loginInfo.nickname,
-        postedBy: req.session.loginInfo._id,
-        contents: req.body.contents,
-        image: req.file.filename
-    });
+    let memo;
+    if(req.file) {
+        // CREATE NEW MEMO
+        memo = new Memo({
+            writer: req.session.loginInfo.username,
+            nickname: req.session.loginInfo.nickname,
+            postedBy: req.session.loginInfo._id,
+            contents: req.body.contents,
+            image: req.file.filename
+        });
+    }else{
+        // CREATE NEW MEMO
+        memo = new Memo({
+            writer: req.session.loginInfo.username,
+            nickname: req.session.loginInfo.nickname,
+            postedBy: req.session.loginInfo._id,
+            contents: req.body.contents,
+        });
+    }
+    console.log('[before memo.save]');
 
     // SAVE IN DATABASE
     memo.save(err => {

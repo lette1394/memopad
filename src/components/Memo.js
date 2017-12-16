@@ -358,6 +358,7 @@ Memo.defaultProps = {
 		nickname: 'nickkkk',
 		contents: 'Contents',
 		is_edited: false,
+		image: 'img_0001.jpg',
 		date: { edited: new Date(), created: new Date() },
 		starred: [],
 		comments: []
