@@ -113,6 +113,11 @@ a {
 	height: 200px;
 }
 
+.card .card-content {
+	padding: 2rem;
+	border-radius: 0 0 2px 2px;
+}
+
 
 /* Memo */
 .flex-wrapper span {
@@ -653,4 +658,13 @@ time {
 .edited {
 	margin-right: 2rem;	
 	
+}
+
+.file-field.input-field {
+	margin-right: 2rem;
+	margin-left: 2rem;
+}
+
+.file-btn .material-icons {
+	font-size: 1.8rem;
 }
