@@ -266,7 +266,7 @@ class Memo extends React.Component {
 
 		const imgView = (
 			<div className="card-image waves-effect waves-block waves-light">
-				<img className="activator" src="/img/img_0001.jpg" />
+				<img className="activator" src={/img/${this.props.image}} />
 			</div>
 		)
 
@@ -348,6 +348,7 @@ Memo.defaultProps = {
 		nickname: 'nickkkk',
 		contents: 'Contents',
 		is_edited: false,
+		image: 'img_0001.jpg',
 		date: { edited: new Date(), created: new Date() },
 		starred: [],
 		comments: []

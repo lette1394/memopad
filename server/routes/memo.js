@@ -58,7 +58,8 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
 
     if (req.file && (path.extname(req.file.filename) !== ".jpg"
         && path.extname(req.file.filename) !== ".png"
-        && path.extname(req.file.filename) !== ".jpeg")) {
+            && path.extname(req.file.filename) !== ".jpeg"
+            && path.extname(req.file.filename) !== ".gif")) {
         console.log('[req.fields.contents]');
         return res.status(400).json({
             error: "NOT A IMAGE FILE",
