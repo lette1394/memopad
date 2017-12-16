@@ -282,7 +282,7 @@ class Memo extends React.Component {
 				{ this.props.data.image ? imgView : undefined} 
 
 				<div className="card-reveal">
-      		<span className="card-title grey-text text-darken-4 truncate">{data.contents}<i className="material-icons right">close</i></span>
+      		<span className="card-title grey-text text-darken-4 truncate">{data.contents}<i className="material-icons right over">close</i></span>
 						<div className="card-content">
 						<p className="flow-text">
 							{data.contents}
