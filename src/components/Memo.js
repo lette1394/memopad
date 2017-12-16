@@ -1,5 +1,7 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
+import frenchStrings from 'react-timeago/lib/language-strings/ko'
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
 import { Link } from 'react-router';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
@@ -221,8 +223,9 @@ class Memo extends React.Component {
 		)
 
 		// EDITED info
+		const formatter = buildFormatter(frenchStrings);
 		const editedInfo = (
-			<span style={{ color: '#AAB5BC' }}> · edited <TimeAgo date={this.props.data.date.edited} live={true} /></span>
+			<cc className="edited" style={{ color: '#AAB5BC' }}><TimeAgo date={this.props.data.date.edited} live={true} formatter={formatter}/>_수정</cc>
 		);
 
 		const input_comment = (
@@ -261,13 +264,28 @@ class Memo extends React.Component {
 			</div>
 		)
 
+		const imgView = (
+			<div className="card-image waves-effect waves-block waves-light">
+				<img className="activator" src="/img/img_0001.jpg" />
+			</div>
+		)
+
 		const memoView = (
-			<div className="card hoverable">
+			<div className="card sticky-action hoverable">
 				<div className="info">
-					<Link to={`/wall/${this.props.data.postedBy.username}/${this.props.data.postedBy.nickname}`} className="username">{this.props.data.postedBy.nickname}</Link>  <TimeAgo date={data.date.created} />
+					<Link to={`/wall/${this.props.data.postedBy.username}/${this.props.data.postedBy.nickname}`} className="username">{this.props.data.postedBy.nickname}</Link> <TimeAgo date={data.date.created} formatter={formatter} />
 					{ this.props.data.is_edited ? editedInfo : undefined }
 					{ ownership ? dropDownMenu : undefined }
 				</div>
+
+				{/* 디비에 image가 있으면 넣고 아니면 안넣고 */}
+				{ imgView } 
+
+				<div className="card-reveal">
+      <span className="card-title grey-text text-darken-4">제목<i className="material-icons right">close</i></span>
+      <p className="flow-text">Here is some more information about this product that is only revealed once clicked on.</p>
+    </div>
+
 				<div className="card-content">
 					<p className='flow-text'>
 						{data.contents} 
@@ -278,7 +296,7 @@ class Memo extends React.Component {
 					<i className="star-count">{data.starred.length}</i>
 				</div>
 				
-				<div>
+				<div className="comments-wrapper">
 					{mapToComponents(this.props.data.comments)}				
 					{this.state.commentMode ? input_comment : undefined}
 					{this.props.isLoggedIn ? commentButton : dumb}

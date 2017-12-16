@@ -10,7 +10,8 @@ module.exports = {
 
     output: {
         path: __dirname + '/public/',
-        filename: 'bundle.js'
+				filename: 'bundle.js',
+				publicPath: '/uploads'
     },
 
     module: {
@@ -26,7 +27,12 @@ module.exports = {
             {
                 test: /\.css$/,
                 loader: 'style!css-loader'
-            }
+						},
+						{
+							test: /\.(jpg|png|svg)$/,
+							loader: 'file',
+							include: '/uploads'
+						}
         ]
     },
 
