@@ -3,9 +3,18 @@ import Memo from '../models/memo';
 import mongoose from 'mongoose';
 
 const router = express.Router();
-var multer = require('multer');
-var bodyParser = require('body-parser');
-var path = require('path');
+let multer = require('multer');
+let path = require('path');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/img');
+    },
+    filename: function (req, file, cb) {
+        cb(null, 'img_' + Date.now() + path.extname(file.originalname));
+    }
+});
+
 /*
     WRITE MEMO: POST /api/memo
     BODY SAMPLE: { contents: "sample "}
@@ -14,38 +23,15 @@ var path = require('path');
         2: EMPTY CONTENTS
 */
 
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: false }));
+router.post('/', multer({storage: storage}).single('file'), (req, res) => {
+    console.log('[Start post]');
+    console.log('[fileName]');
+    console.log(req.file.filename);
 
-router.post('/', (req, res) => {
-    console.log('start memo/post : ' + req.body.formData);
-    console.log('start memo/post : ');
-    console.log(req.body);
-    console.log(req.body.formData);
-    var storage = multer.diskStorage({
-        destination: 'uploads/',
-        filename: req.body.fileName
-    });
-
-    var upload = multer({storage: storage}).single('file');
-
-    upload(req, res, function (err) {
-        if (err) {
-            console.log(err);
-            // return res.end("Error uploading file.");
-        } else {
-            console.log('upload in /memo/post : ');
-            console.log(req.body);
-            // req.file.forEach( function(f) {
-            //     console.log(f);
-            //     // and move file to final destination...
-            // });
-            // res.end("File has been uploaded");
-        }
-    });
 
     // CHECK LOGIN STATUS
     if (typeof req.session.loginInfo === 'undefined') {
+        console.log('[req.session.loginInfo]');
         return res.status(403).json({
             error: "NOT LOGGED IN",
             code: 1
@@ -54,6 +40,7 @@ router.post('/', (req, res) => {
 
     // CHECK CONTENTS VALID
     if (typeof req.body.contents !== 'string') {
+        console.log('[req.fields.contents]');
         return res.status(400).json({
             error: "EMPTY CONTENTS",
             code: 2
@@ -61,15 +48,26 @@ router.post('/', (req, res) => {
     }
 
     if (req.body.contents === "") {
+        console.log('[req.fields.contents]');
         return res.status(400).json({
             error: "EMPTY CONTENTS",
             code: 2
         });
     }
+    console.log('extension : ');
+    console.log(path.extname(req.file.filename));
 
-    console.log('##server/memo');
-    console.log(req.body.contents);
-    console.log('!!server/memo');
+    if (path.extname(req.file.filename) !== ".jpg"
+        && path.extname(req.file.filename) !== ".png"
+        && path.extname(req.file.filename) !== ".jpeg") {
+        console.log('[req.fields.contents]');
+        return res.status(400).json({
+            error: "NOT A IMAGE FILE",
+            code: 2
+        });
+    }
+
+    console.log('[before memo = new Memo');
 
     // CREATE NEW MEMO
     let memo = new Memo({
@@ -77,13 +75,19 @@ router.post('/', (req, res) => {
         nickname: req.session.loginInfo.nickname,
         postedBy: req.session.loginInfo._id,
         contents: req.body.contents,
-        image: req.body.fileName
+        image: req.file.filename
     });
+    console.log('[before memo.save]');
 
     // SAVE IN DATABASE
     memo.save(err => {
-        if (err) throw err;
-        return res.json({success: true});
+        if (err) {
+            console.log('error in memo.save()');
+            throw err;
+        } else {
+            console.log('[In memo.save]');
+            return res.json({success: true});
+        }
     });
 });
 
@@ -143,7 +147,7 @@ router.put('/:id', (req, res) => {
         }
 
         // IF EXISTS, CHECK WRITER
-        if (memo.writer != req.session.loginInfo.username) {
+        if (memo.writer !== req.session.loginInfo.username) {
             return res.status(403).json({
                 error: "PERMISSION FAILURE",
                 code: 5

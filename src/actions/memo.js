@@ -1,50 +1,53 @@
 import {
-    MEMO_POST,
-    MEMO_POST_SUCCESS,
-    MEMO_POST_FAILURE,
-    MEMO_LIST,
-    MEMO_LIST_SUCCESS,
-    MEMO_LIST_FAILURE,
+    MEMO_COMMENT,
+    MEMO_COMMENT_FAILURE,
+    MEMO_COMMENT_SUCCESS,
+    MEMO_COMMENTREMOVE,
+    MEMO_COMMENTREMOVE_FAILURE,
+    MEMO_COMMENTREMOVE_SUCCESS,
     MEMO_EDIT,
     MEMO_EDIT_SUCCESS,
-    MEMO_EDIT_FAILURE,
+    MEMO_LIST,
+    MEMO_LIST_FAILURE,
+    MEMO_LIST_SUCCESS,
+    MEMO_POST,
+    MEMO_POST_FAILURE,
+    MEMO_POST_SUCCESS,
     MEMO_REMOVE,
-    MEMO_REMOVE_SUCCESS,
     MEMO_REMOVE_FAILURE,
+    MEMO_REMOVE_SUCCESS,
     MEMO_STAR,
-    MEMO_STAR_SUCCESS,
-		MEMO_STAR_FAILURE,
-		MEMO_COMMENT,
-		MEMO_COMMENT_SUCCESS,
-		MEMO_COMMENT_FAILURE,
-		MEMO_COMMENTREMOVE,
-		MEMO_COMMENTREMOVE_SUCCESS,
-		MEMO_COMMENTREMOVE_FAILURE
-		
+    MEMO_STAR_FAILURE,
+    MEMO_STAR_SUCCESS
 } from './ActionTypes';
 import axios from 'axios';
+
 var path = require('path');
 
 /* MEMO POST */
 export function memoPostRequest(contents, file) {
     return (dispatch) => {
         dispatch(memoPost());
+        let formData = new FormData();
+        formData.append('contents', contents);
+        formData.append('file', file);
 
-        const formData = {
-            file : file,
-            fileName : file.name,
-            fileName2 : file.originalname,
-            contents : contents
-        };
-
+        console.log('[just formData]');
         console.log(formData);
 
-        return axios.post('/api/memo/', { formData : 'aaaa' })
-        .then((response) => {
-            dispatch(memoPostSuccess());
-        }).catch((error) => {
-            dispatch(memoPostFailure(error.response.data.code));
-        });
+        console.log('[Start of formData\'s data]');
+        // Display the key/value pairs
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+        console.log('[End of formData\'s data]');
+
+        return axios.post('/api/memo/', formData)
+            .then((response) => {
+                dispatch(memoPostSuccess());
+            }).catch((error) => {
+                dispatch(memoPostFailure(error.response.data.code));
+            });
     };
 }
 
@@ -79,12 +82,12 @@ export function memoPostFailure(error) {
 */
 export function memoListRequest(isInitial, listType, id, username) {
     return (dispatch) => {
-        
+
         dispatch(memoList());
 
         let url = '/api/memo';
 
-        if(typeof username === "undefined") {
+        if (typeof username === "undefined") {
             // username not given, load public memo
             url = isInitial ? url : `${url}/${listType}/${id}`;
             // or url + '/' + listType + Z'/' +  id
@@ -92,16 +95,17 @@ export function memoListRequest(isInitial, listType, id, username) {
             // load memos of a user
             url = isInitial ? `${url}/${username}` : `${url}/${username}/${listType}/${id}`;
         }
- 
+
         return axios.get(url)
-        .then((response) => {
-            dispatch(memoListSuccess(response.data, isInitial, listType));
-        }).catch((error) => {
-            dispatch(memoListFailure());
-        });
+            .then((response) => {
+                dispatch(memoListSuccess(response.data, isInitial, listType));
+            }).catch((error) => {
+                dispatch(memoListFailure());
+            });
 
     };
 }
+
 export function memoList() {
     return {
         type: MEMO_LIST
@@ -122,18 +126,18 @@ export function memoListFailure() {
         type: MEMO_LIST_FAILURE
     };
 }
- 
+
 /* MEMO EDIT */
 export function memoEditRequest(id, index, contents) {
     return (dispatch) => {
         dispatch(memoEdit());
 
-        return axios.put('/api/memo/' + id, { contents })
-        .then((response) => {
-            dispatch(memoEditSuccess(index, response.data.memo));
-        }).catch((error) => {
-            dispatch(memoEditFailure(error.response.data.code));
-        });
+        return axios.put('/api/memo/' + id, {contents})
+            .then((response) => {
+                dispatch(memoEditSuccess(index, response.data.memo));
+            }).catch((error) => {
+                dispatch(memoEditFailure(error.response.data.code));
+            });
     };
 }
 
@@ -165,12 +169,12 @@ export function memoRemoveRequest(id, index) {
         dispatch(memoRemove());
 
         return axios.delete('/api/memo/' + id)
-        .then((response)=> {
-            dispatch(memoRemoveSuccess(index));
-        }).catch((error) => {
-            console.log(error);
-            dispatch(memoRemoveFailure(error.response.data.code));
-        });
+            .then((response) => {
+                dispatch(memoRemoveSuccess(index));
+            }).catch((error) => {
+                console.log(error);
+                dispatch(memoRemoveFailure(error.response.data.code));
+            });
     };
 }
 
@@ -200,11 +204,11 @@ export function memoStarRequest(id, index) {
         dispatch(memoStar());
 
         return axios.post('/api/memo/star/' + id)
-        .then((response) => {
-            dispatch(memoStarSuccess(index, response.data));
-        }).catch((error) => {
-            dispatch(memoStarFailure(error.response.data.code));
-        });
+            .then((response) => {
+                dispatch(memoStarSuccess(index, response.data));
+            }).catch((error) => {
+                dispatch(memoStarFailure(error.response.data.code));
+            });
     };
 }
 
@@ -218,11 +222,11 @@ export function memoStarSuccess(index, data) {
     return {
         type: MEMO_STAR_SUCCESS,
         index,
-				memo: data.memo,
-				has_starred: data.has_starred
+        memo: data.memo,
+        has_starred: data.has_starred
     };
 }
- 
+
 export function memoStarFailure(error) {
     return {
         type: MEMO_STAR_FAILURE,
@@ -233,75 +237,74 @@ export function memoStarFailure(error) {
 /* MEMO COMMENT */
 
 export function memoCommentRequest(id, index, comment) {
-	return (dispatch) => {
-			dispatch(memoStar());
+    return (dispatch) => {
+        dispatch(memoStar());
 
-			return axios.post('/api/memo/comment/' + id, { comment })
-			.then((response) => {
-					dispatch(memoCommentSuccess(index, response.data));
-			}).catch((error) => {
-					dispatch(memoCommentFailure(error.response.data.code));
-			});
-	};
+        return axios.post('/api/memo/comment/' + id, {comment})
+            .then((response) => {
+                dispatch(memoCommentSuccess(index, response.data));
+            }).catch((error) => {
+                dispatch(memoCommentFailure(error.response.data.code));
+            });
+    };
 }
 
 
-
 export function memoCommentSuccess(index, data) {
-	return {
-		type: MEMO_COMMENT_SUCCESS,
-		index,
-		memo: data.memo
-	}
+    return {
+        type: MEMO_COMMENT_SUCCESS,
+        index,
+        memo: data.memo
+    }
 }
 
 
 export function memoCommentFailure(error) {
-	return {
-		type: MEMO_COMMENT_FAILURE,
-		error
-	}
+    return {
+        type: MEMO_COMMENT_FAILURE,
+        error
+    }
 }
 
 export function memoComment() {
-	return {
-			type: MEMO_COMMENT
-	};
+    return {
+        type: MEMO_COMMENT
+    };
 }
 
 export function memoCommentRemoveRequest(id, index, memoId, memoIndex) {
-	return (dispatch) => {
-			dispatch(memoCommentRemove());
+    return (dispatch) => {
+        dispatch(memoCommentRemove());
 
-			return axios.post('/api/memo/comment/remove/' + memoId, { id, index, memoIndex } )
-			.then((response) => {
-					dispatch(memoCommentRemoveSuccess(memoIndex, response.data, index));
-			}).catch((error) => {
-					dispatch(memoCommentRemoveFailure(error.response.data.code));
-			});
-	};
+        return axios.post('/api/memo/comment/remove/' + memoId, {id, index, memoIndex})
+            .then((response) => {
+                dispatch(memoCommentRemoveSuccess(memoIndex, response.data, index));
+            }).catch((error) => {
+                dispatch(memoCommentRemoveFailure(error.response.data.code));
+            });
+    };
 }
 
 
 export function memoCommentRemove() {
-	return {
-			type: MEMO_COMMENTREMOVE
-	};
+    return {
+        type: MEMO_COMMENTREMOVE
+    };
 }
 
 export function memoCommentRemoveSuccess(index, data, commentIdx) {
-	return {
-		type: MEMO_COMMENTREMOVE_SUCCESS,
-		index,
-		comment: data.comment,
-		commentIdx
-	}
+    return {
+        type: MEMO_COMMENTREMOVE_SUCCESS,
+        index,
+        comment: data.comment,
+        commentIdx
+    }
 }
 
 
 export function memoCommentRemoveFailure(error) {
-	return {
-		type: MEMO_COMMENTREMOVE_FAILURE,
-		error
-	}
+    return {
+        type: MEMO_COMMENTREMOVE_FAILURE,
+        error
+    }
 }
