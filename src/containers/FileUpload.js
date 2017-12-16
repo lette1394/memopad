@@ -39,7 +39,15 @@ class UploadFiles extends React.Component {
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
-                <input type="file" onChange={this.handleChange}/>
+							<div className="file-field input-field">
+								<div className="btn">
+									<span className="file-btn"><i className="material-icons center-align">image</i></span>
+									<input className="file-input" type="file" onChange={this.handleChange}/>
+								</div>
+								<div className="file-path-wrapper">
+									<input className="file-path validate" type="text" placeholder="이미지 업로드" />
+								</div>
+							</div>
             </form>
         );
     }

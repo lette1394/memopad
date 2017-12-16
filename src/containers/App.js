@@ -81,7 +81,9 @@ class App extends React.Component {
 				{isAuth ? undefined : <Header isLoggedIn={this.props.status.isLoggedIn}
 					onLogout={this.handleLogout}
 					onSearch={this.handleSearch}
-					accounts={this.props.searchAccounts} 
+					accounts={this.props.searchAccounts}
+					username={this.props.status.currentUser}
+					nickname={this.props.status.currentNickname}
 					/>}
 				{this.props.children}
 			</div>
