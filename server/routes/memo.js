@@ -26,7 +26,6 @@ var storage = multer.diskStorage({
 router.post('/', multer({storage: storage}).single('file'), (req, res) => {
     console.log('[Start post]');
     console.log('[fileName]');
-    console.log(req.file.filename);
 
 
     // CHECK LOGIN STATUS
@@ -55,11 +54,11 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
         });
     }
     console.log('extension : ');
-    console.log(path.extname(req.file.filename));
 
-    if (path.extname(req.file.filename) !== ".jpg"
+
+    if (req.file && (path.extname(req.file.filename) !== ".jpg"
         && path.extname(req.file.filename) !== ".png"
-        && path.extname(req.file.filename) !== ".jpeg") {
+        && path.extname(req.file.filename) !== ".jpeg")) {
         console.log('[req.fields.contents]');
         return res.status(400).json({
             error: "NOT A IMAGE FILE",
@@ -69,14 +68,24 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
 
     console.log('[before memo = new Memo');
 
-    // CREATE NEW MEMO
-    let memo = new Memo({
-        writer: req.session.loginInfo.username,
-        nickname: req.session.loginInfo.nickname,
-        postedBy: req.session.loginInfo._id,
-        contents: req.body.contents,
-        image: req.file.filename
-    });
+    if(req.file) {
+        // CREATE NEW MEMO
+        let memo = new Memo({
+            writer: req.session.loginInfo.username,
+            nickname: req.session.loginInfo.nickname,
+            postedBy: req.session.loginInfo._id,
+            contents: req.body.contents,
+            image: req.file.filename
+        });
+    }else{
+        // CREATE NEW MEMO
+        let memo = new Memo({
+            writer: req.session.loginInfo.username,
+            nickname: req.session.loginInfo.nickname,
+            postedBy: req.session.loginInfo._id,
+            contents: req.body.contents,
+        });
+    }
     console.log('[before memo.save]');
 
     // SAVE IN DATABASE
