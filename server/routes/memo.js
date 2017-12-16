@@ -67,10 +67,10 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
     }
 
     console.log('[before memo = new Memo');
-
+    let memo;
     if(req.file) {
         // CREATE NEW MEMO
-        let memo = new Memo({
+        memo = new Memo({
             writer: req.session.loginInfo.username,
             nickname: req.session.loginInfo.nickname,
             postedBy: req.session.loginInfo._id,
@@ -79,7 +79,7 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
         });
     }else{
         // CREATE NEW MEMO
-        let memo = new Memo({
+        memo = new Memo({
             writer: req.session.loginInfo.username,
             nickname: req.session.loginInfo.nickname,
             postedBy: req.session.loginInfo._id,
