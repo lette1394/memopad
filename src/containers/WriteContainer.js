@@ -46,23 +46,28 @@ class Write extends React.Component {
                     /*
                             ERROR CODES
                                     1: NOT LOGGED IN
-                                    2: EMPTY CONTENTS
+																		2: EMPTY CONTENTS
+																		3: UNSUPPORT FILE EXTENSION
                     */
 
                     let $toastContent;
                     switch (this.props.postStatus.error) {
                         case 1:
                             // IF NOT LOGGED IN, NOTIFY AND REFRESH AFTER
-                            $toastContent = $('<span style="color: #FFB4BA">You are not logged in</span>');
+                            $toastContent = $('<span style="color: #FFB4BA">로그인 해주세요</span>');
                             Materialize.toast($toastContent, 2000);
                             setTimeout(() => {
                                 location.reload(false);
                             }, 2000);
                             break;
                         case 2:
-                            $toastContent = $('<span style="color: #FFB4BA">Please write something</span>');
+                            $toastContent = $('<span style="color: #FFB4BA">내용이 비었습니다.</span>');
                             Materialize.toast($toastContent, 2000);
-                            break;
+														break;
+												case 3:
+														$toastContent = $('<span style="color: #FFB4BA">지원하지 않는 파일 형식 입니다. </span>');
+														Materialize.toast($toastContent, 2000);
+														break;
                         default:
                             $toastContent = $('<span style="color: #FFB4BA">Something Broke</span>');
                             Materialize.toast($toastContent, 2000);
