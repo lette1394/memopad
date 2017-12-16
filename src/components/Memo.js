@@ -266,7 +266,7 @@ class Memo extends React.Component {
 
 		const imgView = (
 			<div className="card-image waves-effect waves-block waves-light">
-				<img className="activator" src={/img/${this.props.image}} />
+				<img className="activator" src={`/img/${this.props.data.image}`} />
 			</div>
 		)
 
@@ -279,17 +279,27 @@ class Memo extends React.Component {
 				</div>
 
 				{/* 디비에 image가 있으면 넣고 아니면 안넣고 */}
-				{ imgView } 
+				{ this.props.data.image ? imgView : undefined} 
 
 				<div className="card-reveal">
-      <span className="card-title grey-text text-darken-4">제목<i className="material-icons right">close</i></span>
-      <p className="flow-text">Here is some more information about this product that is only revealed once clicked on.</p>
-    </div>
+      		<span className="card-title grey-text text-darken-4 truncate">{data.contents}<i className="material-icons right">close</i></span>
+						<div className="card-content">
+						<p className="flow-text">
+							{data.contents}
+						</p>
+						</div>
+    		</div>
 
 				<div className="card-content">
-					<p className='flow-text'>
+				 { this.props.data.image ? 
+				 	<p className='flow-text truncate'>
 						{data.contents} 
-					</p>
+					</p> 
+					: 
+					<p className="flow-text">
+						{data.contents} 
+					</p> }
+					
 				</div>
 				<div className="footer">
 					<i className="material-icons log-footer-icon star icon-button" style={starStyle} onClick={this.handleStar}>star</i>

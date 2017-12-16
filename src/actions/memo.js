@@ -37,9 +37,6 @@ export function memoPostRequest(contents, file) {
 
         console.log('[Start of formData\'s data]');
         // Display the key/value pairs
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-        }
         console.log('[End of formData\'s data]');
 
         return axios.post('/api/memo/', formData)
