@@ -668,3 +668,13 @@ time {
 .file-btn .material-icons {
 	font-size: 1.8rem;
 }
+
+.card.sticky-action .card-action {
+	z-index: 0;
+}
+
+i.over {
+	position: absolute !important;
+	right: 1rem !important;
+	top: 2rem !important;
+}

@@ -24,13 +24,8 @@ var storage = multer.diskStorage({
 */
 
 router.post('/', multer({storage: storage}).single('file'), (req, res) => {
-    console.log('[Start post]');
-    console.log('[fileName]');
-
-
     // CHECK LOGIN STATUS
     if (typeof req.session.loginInfo === 'undefined') {
-        console.log('[req.session.loginInfo]');
         return res.status(403).json({
             error: "NOT LOGGED IN",
             code: 1
@@ -39,7 +34,6 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
 
     // CHECK CONTENTS VALID
     if (typeof req.body.contents !== 'string') {
-        console.log('[req.fields.contents]');
         return res.status(400).json({
             error: "EMPTY CONTENTS",
             code: 2
@@ -47,12 +41,12 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
     }
 
     if (req.body.contents === "") {
-        console.log('[req.fields.contents]');
         return res.status(400).json({
-            error: "EMPTY CONTENTS",
-            code: 2
+            error: "UNSUPPORT FILE EXT",
+            code: 3
         });
     }
+
     console.log('extension : ');
 
 
@@ -67,7 +61,6 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
         });
     }
 
-    console.log('[before memo = new Memo');
     let memo;
     if(req.file) {
         // CREATE NEW MEMO
@@ -92,10 +85,8 @@ router.post('/', multer({storage: storage}).single('file'), (req, res) => {
     // SAVE IN DATABASE
     memo.save(err => {
         if (err) {
-            console.log('error in memo.save()');
             throw err;
         } else {
-            console.log('[In memo.save]');
             return res.json({success: true});
         }
     });
